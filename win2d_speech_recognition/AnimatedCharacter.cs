@@ -1,4 +1,5 @@
 ﻿using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Text;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Collections.Generic;
@@ -21,26 +22,35 @@ namespace win2d_speech_recognition {
         private int lastMoveThreshold = 2000 + r.Next(2000);
         private int lastStopThreshold = 2000 + r.Next(2000);
 
+        private static CanvasTextFormat HarryP;
+        static AnimatedCharacter() {
+            HarryP = new CanvasTextFormat();
+            HarryP.FontFamily = "Harry P";
+            HarryP.FontSize = 80;
+            HarryP.WordWrapping = CanvasWordWrapping.NoWrap;
+        }
+
+        public int Width { get { return (int)_boundary.Width; } }
+        public int Height { get { return (int)_boundary.Height; } }
         public char Character { get; set; }
-        public CanvasBitmap Bitmap { get; set; }
+        public CanvasTextLayout TextLayout { get; set; }
 
         private int _velocityX = 1;
         private int _velocityY = 1;
-        private Vector2 _position;
+        private Vector2 _offset;
         private Rect _boundary;
         private static Random r = new Random(DateTime.Now.Millisecond);
 
-        public AnimatedCharacter(char c, Vector2 position) {
+        public AnimatedCharacter(CanvasDevice device, char c) {
             Character = c;
-            Bitmap = CharacterDictionary.Entry[c];
-            _position = position;
-
-            _boundary = new Rect(position.X, position.Y, 100, 150);
+            TextLayout = new CanvasTextLayout(device, c.ToString(), HarryP, 0, 0);
+            _offset = Vector2.Zero;
+            _boundary = new Rect(0, 0, 100, 150);
         }
 
-        public void Draw(CanvasAnimatedDrawEventArgs args) {
-            args.DrawingSession.DrawRectangle(_boundary, Colors.White);
-            args.DrawingSession.DrawImage(Bitmap, _position);
+        public void Draw(CanvasAnimatedDrawEventArgs args, Vector2 position, Color color) {
+            //args.DrawingSession.DrawRectangle(new Rect(position.X, position.Y, Width, Height), Colors.White);
+            args.DrawingSession.DrawTextLayout(TextLayout, position + _offset, color);
         }
 
         public void Update(CanvasAnimatedUpdateEventArgs args) {
@@ -69,18 +79,9 @@ namespace win2d_speech_recognition {
                     _velocityX = Math.Min(threshold, Math.Max(-threshold, _velocityX));
                     _velocityY = Math.Min(threshold, Math.Max(-threshold, _velocityY));
 
-                    double _positionX = _position.X + _velocityX;
-                    if (_positionX + Bitmap.Bounds.Width > _boundary.Right) {
-                        _positionX = _boundary.Right - Bitmap.Bounds.Width;
-                        _velocityX = -_velocityX;
-
-                        if(r.Next(10) == 0) {
-                            _moveState = MOVE_STATE.IDLE;
-                            lastStop = DateTime.Now;
-                        }
-                    }
-                    else if (_positionX < _boundary.Left) {
-                        _positionX = _boundary.Left;
+                    double _offsetX = _offset.X + _velocityX;
+                    if (_offsetX + TextLayout.LayoutBounds.Width > _boundary.Right) {
+                        _offsetX = _boundary.Right - TextLayout.LayoutBounds.Width;
                         _velocityX = -_velocityX;
 
                         if (r.Next(10) == 0) {
@@ -88,20 +89,9 @@ namespace win2d_speech_recognition {
                             lastStop = DateTime.Now;
                         }
                     }
-
-                    double _positionY = _position.Y + _velocityY;
-                    if (_positionY + Bitmap.Bounds.Height > _boundary.Bottom) {
-                        _positionY = _boundary.Bottom - Bitmap.Bounds.Height;
-                        _velocityY = -_velocityY;
-
-                        if (r.Next(10) == 0) {
-                            _moveState = MOVE_STATE.IDLE;
-                            lastStop = DateTime.Now;
-                        }
-                    }
-                    else if (_positionY < _boundary.Top) {
-                        _positionY = _boundary.Top;
-                        _velocityY = -_velocityY;
+                    else if (_offsetX < _boundary.Left) {
+                        _offsetX = _boundary.Left;
+                        _velocityX = -_velocityX;
 
                         if (r.Next(10) == 0) {
                             _moveState = MOVE_STATE.IDLE;
@@ -109,7 +99,27 @@ namespace win2d_speech_recognition {
                         }
                     }
 
-                    _position = new Vector2((float)_positionX, (float)_positionY);
+                    double _offsetY = _offset.Y + _velocityY;
+                    if (_offsetY + TextLayout.LayoutBounds.Height > _boundary.Bottom) {
+                        _offsetY = _boundary.Bottom - TextLayout.LayoutBounds.Height;
+                        _velocityY = -_velocityY;
+
+                        if (r.Next(10) == 0) {
+                            _moveState = MOVE_STATE.IDLE;
+                            lastStop = DateTime.Now;
+                        }
+                    }
+                    else if (_offsetY < _boundary.Top) {
+                        _offsetY = _boundary.Top;
+                        _velocityY = -_velocityY;
+
+                        if (r.Next(10) == 0) {
+                            _moveState = MOVE_STATE.IDLE;
+                            lastStop = DateTime.Now;
+                        }
+                    }
+
+                    _offset = new Vector2((float)_offsetX, (float)_offsetY);
 
                     TimeSpan startDelta = DateTime.Now - lastStart;
                     if (startDelta.TotalMilliseconds > lastMoveThreshold && r.Next(100) == 0) {
