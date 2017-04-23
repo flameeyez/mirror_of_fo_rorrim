@@ -26,11 +26,12 @@ namespace win2d_speech_recognition {
             }
         }
 
-        public AnimatedWord(CanvasDevice device, string word) {
-            byte red = (byte)(100 + r.Next(155));
-            byte green = (byte)(100 + r.Next(155));
-            byte blue = (byte)(100 + r.Next(155));
-            _color = Color.FromArgb(255, red, green, blue);
+        public AnimatedWord(CanvasDevice device, string word, Color color) {
+            //byte red = (byte)(100 + r.Next(155));
+            //byte green = red;// (byte)(100 + r.Next(155));
+            //byte blue = red;// (byte)(100 + r.Next(155));
+            //_color = Color.FromArgb(255, red, green, blue);
+            _color = color;
 
             foreach (char c in word) {
                 _characters.Add(new AnimatedCharacter(device, c));

@@ -65,6 +65,8 @@ namespace win2d_speech_recognition {
         }
 
         private void canvasMain_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args) {
+            mediaSimple.MediaPlayer.RealTimePlayback = true;
+            mediaSimple.MediaPlayer.IsLoopingEnabled = true;
             //Puzzles.Add(new PalindromePuzzle(sender.Device, "Sore was I ere I looked at Eros.", "saw"));
             //Puzzles.Add(new PalindromePuzzle(sender.Device, "Marge let a moody infant doom a telegram.", "baby"));
             Puzzles.Add(new PalindromePuzzle(sender.Device, "Sore was I ere I saw Eros.", ""));

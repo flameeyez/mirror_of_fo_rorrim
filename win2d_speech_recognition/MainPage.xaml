@@ -8,11 +8,12 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d" Loaded="Page_Loaded">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="Black">
+        <MediaPlayerElement x:Name="mediaSimple" Opacity="0.3" Width="1920" Source="ms-appx:///videos/background.mp4" AutoPlay="True" Stretch="UniformToFill" />
         <canvas:CanvasAnimatedControl x:Name="canvasMain" 
             Draw="canvasMain_Draw"
             Update="canvasMain_Update"
-            ClearColor="Black" 
+            ClearColor="Transparent"
             CreateResources="canvasMain_CreateResources"
             PointerMoved="canvasMain_PointerMoved"
             PointerPressed="canvasMain_PointerPressed"

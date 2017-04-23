@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
 
 namespace win2d_speech_recognition {
     class AnimatedString {
@@ -17,11 +18,14 @@ namespace win2d_speech_recognition {
         private int _height;
 
         public AnimatedString(CanvasDevice device, string str) {
+            Color darkColor = Color.FromArgb(255, 150, 150, 150);
+            Color lightColor = Color.FromArgb(255, 255, 255, 255);
+
             string[] words = str.Split(" ".ToCharArray());
 
             AnimatedLine line = new AnimatedLine();
             for (int i = 0; i < words.Length; i++) {
-                AnimatedWord currentWord = new AnimatedWord(device, words[i]);
+                AnimatedWord currentWord = new AnimatedWord(device, words[i], i % 2 == 0 ? darkColor : lightColor);
                 if (line.Width + currentWord.Width >= 1800) {
                     Lines.Add(line);
                     line = new AnimatedLine();
