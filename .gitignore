@@ -259,3 +259,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/win2d_speech_recognition/videos/background.mp4
+/win2d_speech_recognition/videos/background.m2v
