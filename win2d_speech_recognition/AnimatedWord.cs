@@ -11,7 +11,7 @@ using Windows.UI;
 namespace win2d_speech_recognition {
     class AnimatedWord {
         private static Random r;
-        private Color _color;
+        private int loopCount;
 
         static AnimatedWord() {
             r = new Random((int)DateTime.Now.Ticks);
@@ -27,22 +27,14 @@ namespace win2d_speech_recognition {
         }
 
         public AnimatedWord(CanvasDevice device, string word, Color color) {
-            //byte red = (byte)(100 + r.Next(155));
-            //byte green = red;// (byte)(100 + r.Next(155));
-            //byte blue = red;// (byte)(100 + r.Next(155));
-            //_color = Color.FromArgb(255, red, green, blue);
-            _color = color;
-
             foreach (char c in word) {
-                _characters.Add(new AnimatedCharacter(device, c));
+                _characters.Add(new AnimatedCharacter(device, c, color));
             }
         }
 
-        public void Draw(CanvasAnimatedDrawEventArgs args, Vector2 position) {
-            Vector2 charPosition = position;
-            foreach (AnimatedCharacter c in _characters) {
-                c.Draw(args, charPosition, _color);
-                charPosition.X += c.Width;
+        public void Draw(CanvasAnimatedDrawEventArgs args) {
+            for (int i = 0; i < _characters.Count; i++) {
+                _characters[i].Draw(args);
             }
         }
 
@@ -50,6 +42,24 @@ namespace win2d_speech_recognition {
             foreach (AnimatedCharacter c in _characters) {
                 c.Update(args);
             }
+
+            loopCount++;
+        }
+
+        internal void SetPosition(Vector2 position) {
+            Vector2 currentPosition = position;
+            foreach (AnimatedCharacter c in _characters) {
+                c.Position = currentPosition;
+                currentPosition.X += c.Width;
+            }
+        }
+
+        public override string ToString() {
+            StringBuilder sb = new StringBuilder();
+            foreach(AnimatedCharacter c in _characters) {
+                sb.Append(c.Character);
+            }
+            return sb.ToString();
         }
     }
 }

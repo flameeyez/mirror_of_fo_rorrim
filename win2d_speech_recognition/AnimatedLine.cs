@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace win2d_speech_recognition {
     class AnimatedLine {
-        private static int _spaceBufferWidth = 100;
+        public static int SpaceBuffer = 100;
         private List<AnimatedWord> Words = new List<AnimatedWord>();
         public int Width {
             get {
                 if (Words.Count == 0) { return 0; }
-                return Words.Sum(x => x.Width) + (Words.Count - 1) * _spaceBufferWidth;
+                return Words.Sum(x => x.Width) + (Words.Count - 1) * SpaceBuffer;
             }
         }
 
         public int Height {
             get {
-                if(Words.Count == 0) { return 0;}
+                if (Words.Count == 0) { return 0; }
                 return Words[0].Height;
             }
         }
@@ -28,17 +28,25 @@ namespace win2d_speech_recognition {
             Words.Add(word);
         }
 
-        public void Draw(CanvasAnimatedDrawEventArgs args, Vector2 position) {
-            Vector2 wordPosition = position;
-            foreach(AnimatedWord word in Words) {
-                word.Draw(args, wordPosition);
-                wordPosition.X += word.Width + _spaceBufferWidth;
+        public void Draw(CanvasAnimatedDrawEventArgs args) {
+            foreach (AnimatedWord word in Words) {
+                word.Draw(args);
             }
         }
 
         public void Update(CanvasAnimatedUpdateEventArgs args) {
-            foreach(AnimatedWord word in Words) {
+            foreach (AnimatedWord word in Words) {
                 word.Update(args);
+            }
+        }
+
+        internal void SetPosition(int y) {
+            // determine x position based on width
+            int x = (1920 - Width) / 2;
+            // set the position of each word
+            foreach (AnimatedWord word in Words) {
+                word.SetPosition(new Vector2(x, y));
+                x += word.Width + AnimatedLine.SpaceBuffer;
             }
         }
     }

@@ -10,22 +10,18 @@ using Windows.UI;
 
 namespace win2d_speech_recognition {
     class AnimatedString {
-        private static int _lineBuffer = 20;
-        private List<AnimatedLine> Lines = new List<AnimatedLine>();
+        public static Color DarkColor = Color.FromArgb(255, 150, 150, 150);
+        public static Color LightColor = Color.FromArgb(255, 255, 255, 255);
 
-        private Vector2 _position;
-        private int _width;
-        private int _height;
+        protected static int _lineBuffer = 20;
+        protected List<AnimatedLine> Lines = new List<AnimatedLine>();
 
         public AnimatedString(CanvasDevice device, string str) {
-            Color darkColor = Color.FromArgb(255, 150, 150, 150);
-            Color lightColor = Color.FromArgb(255, 255, 255, 255);
-
             string[] words = str.Split(" ".ToCharArray());
 
             AnimatedLine line = new AnimatedLine();
             for (int i = 0; i < words.Length; i++) {
-                AnimatedWord currentWord = new AnimatedWord(device, words[i], i % 2 == 0 ? darkColor : lightColor);
+                AnimatedWord currentWord = new AnimatedWord(device, words[i], i % 2 == 0 ? DarkColor : LightColor);
                 if (line.Width + currentWord.Width >= 1800) {
                     Lines.Add(line);
                     line = new AnimatedLine();
@@ -36,23 +32,23 @@ namespace win2d_speech_recognition {
 
             if (line.Width > 0) { Lines.Add(line); }
 
-            _width = Lines.Max(x => x.Width);
-            _height = Lines.Sum(x => x.Height) + (Lines.Count - 1) * _lineBuffer;
-            _position = new Vector2((1920 - _width) / 2, (1080 - _height) / 2);
+            int totalHeight = Lines.Sum(x => x.Height) + (Lines.Count - 1) * _lineBuffer;
+            int y = (1080 - totalHeight) / 2;
 
-            // determine each line's position based on line width
-            // determine vertical position based on number of lines and line height
-        }
-
-        public void Draw(CanvasAnimatedDrawEventArgs args) {
-            Vector2 position = _position;
-            foreach (AnimatedLine line in Lines) {
-                line.Draw(args, position);
-                position.Y += line.Height + _lineBuffer;
+            // center each line
+            foreach(AnimatedLine l in Lines) {
+                l.SetPosition(y: y);
+                y += l.Height + _lineBuffer;
             }
         }
 
-        public void Update(CanvasAnimatedUpdateEventArgs args) {
+        public virtual void Draw(CanvasAnimatedDrawEventArgs args) {
+            foreach (AnimatedLine line in Lines) {
+                line.Draw(args);
+            }
+        }
+
+        public virtual void Update(CanvasAnimatedUpdateEventArgs args) {
             foreach (AnimatedLine line in Lines) {
                 line.Update(args);
             }
