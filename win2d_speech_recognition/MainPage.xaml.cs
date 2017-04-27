@@ -49,6 +49,7 @@ namespace win2d_speech_recognition {
         private object SpeechResultsLock = new object();
         private List<PalindromePuzzle> Puzzles = new List<PalindromePuzzle>();
         private int nIndex = 0;
+        private Queue<string> FloatingWordsQueue = new Queue<string>();
 
         private void canvasMain_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args) {
             Puzzles[nIndex].Draw(args);
@@ -72,8 +73,14 @@ namespace win2d_speech_recognition {
         private async void canvasMain_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args) {
             Puzzles[nIndex].Update(args);
 
+            lock (FloatyWordsLock) {
+                if (FloatingWordsQueue.Count > 0 && r.Next(100) == 0) {
+                    FloatyWords.Add(new FloatingAnimatedString(canvasMain.Device, FloatingWordsQueue.Dequeue()));
+                }
+            }
+
             for (int i = FloatyWords.Count - 1; i >= 0; i--) {
-                if (FloatyWords[i].IsOffScreen) {
+                if (FloatyWords[i].IsOutOfBounds) {
                     FloatyWords.RemoveAt(i);
                 }
                 else {
@@ -122,7 +129,12 @@ namespace win2d_speech_recognition {
                 else {
                     // build a floaty word
                     lock (FloatyWordsLock) {
-                        FloatyWords.Add(new FloatingAnimatedString(canvasMain.Device, args.Result.Text));
+                        string[] words = args.Result.Text.Split(" ".ToCharArray());
+                        foreach(string word in words) {
+                            FloatingWordsQueue.Enqueue(word);
+                            //FloatyWords.Add(new FloatingAnimatedString(canvasMain.Device, word));
+                        }
+                        //FloatyWords.Add(new FloatingAnimatedString(canvasMain.Device, args.Result.Text));
                     }
                 }
             }

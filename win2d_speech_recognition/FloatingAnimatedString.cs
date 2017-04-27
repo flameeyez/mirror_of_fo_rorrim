@@ -14,6 +14,8 @@ namespace win2d_speech_recognition {
         private Vector2 _position;
         private List<FloatingAnimatedCharacter> Characters = new List<FloatingAnimatedCharacter>();
         private int loopCount;
+        private int _width { get { return Characters.Sum(x => x.Width); } }
+        private int _velocityX;
 
         public FloatingAnimatedString(CanvasDevice device, string str) {
             byte opacity = (byte)(10 + r.Next(10));
@@ -27,10 +29,20 @@ namespace win2d_speech_recognition {
 
             }
 
-            _position = new Vector2(-Characters.Sum(x => x.Width), r.Next(900));
+            switch (r.Next(2)) {
+                case 0:
+                    _position = new Vector2(1920, r.Next(900));
+                    _velocityX = -(1 + r.Next(2));
+                    break;
+                case 1:
+                    _position = new Vector2(-_width, r.Next(900));
+                    _velocityX = 1 + r.Next(2);
+                    break;
+            }
+
         }
 
-        public bool IsOffScreen { get { return _position.X > 1920; } }
+        public bool IsOutOfBounds { get { return _position.X > 2000 || _position.X < -_width - 50; } }
 
         public void Draw(CanvasAnimatedDrawEventArgs args) {
             int x = (int)_position.X;
@@ -42,7 +54,7 @@ namespace win2d_speech_recognition {
         }
 
         public void Update(CanvasAnimatedUpdateEventArgs args) {
-            _position.X += 1;
+            _position.X += _velocityX;
             loopCount++;
         }
     }
