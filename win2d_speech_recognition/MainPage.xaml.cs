@@ -74,17 +74,17 @@ namespace win2d_speech_recognition {
             Puzzles[nIndex].Update(args);
 
             lock (FloatyWordsLock) {
-                if (FloatingWordsQueue.Count > 0 && r.Next(100) == 0) {
+                if (FloatingWordsQueue.Count > 0 && r.Next(50) == 0) {
                     FloatyWords.Add(new FloatingAnimatedString(canvasMain.Device, FloatingWordsQueue.Dequeue()));
                 }
-            }
 
-            for (int i = FloatyWords.Count - 1; i >= 0; i--) {
-                if (FloatyWords[i].IsOutOfBounds) {
-                    FloatyWords.RemoveAt(i);
-                }
-                else {
-                    FloatyWords[i].Update(args);
+                for (int i = FloatyWords.Count - 1; i >= 0; i--) {
+                    if (FloatyWords[i].IsOutOfBounds) {
+                        FloatyWords.RemoveAt(i);
+                    }
+                    else {
+                        FloatyWords[i].Update(args);
+                    }
                 }
             }
         }
@@ -105,9 +105,9 @@ namespace win2d_speech_recognition {
 
         private async void ContinuousRecognitionSession_Completed(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionCompletedEventArgs args) {
             lock (SpeechResultsLock) {
-                SpeechResults.Add("Speech recognition has ended.");
-                SpeechResults.Add("Status: " + args.Status.ToString());
-                SpeechResults.Add("Restarting recognition sequence.");
+                //SpeechResults.Add("Speech recognition has ended.");
+                //SpeechResults.Add("Status: " + args.Status.ToString());
+                //SpeechResults.Add("Restarting recognition sequence.");
             }
             await speechRecognizer.ContinuousRecognitionSession.StartAsync(SpeechContinuousRecognitionMode.Default);
         }
@@ -116,7 +116,7 @@ namespace win2d_speech_recognition {
             if (args.Result.Confidence == SpeechRecognitionConfidence.Medium ||
               args.Result.Confidence == SpeechRecognitionConfidence.High) {
                 lock (SpeechResultsLock) {
-                    SpeechResults.Add("Matched: " + args.Result.Text);
+                    // SpeechResults.Add("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
                 }
 
                 if (args.Result.Text == Puzzles[nIndex].Solution) {
