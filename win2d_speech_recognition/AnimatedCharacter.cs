@@ -33,6 +33,8 @@ namespace win2d_speech_recognition {
             HarryP.WordWrapping = CanvasWordWrapping.NoWrap;
         }
 
+        private int _rotation;
+
         public int Width { get { return (int)_boundary.Width; } }
         public int Height { get { return (int)_boundary.Height; } }
         public char Character { get; set; }
@@ -61,12 +63,16 @@ namespace win2d_speech_recognition {
         }
 
         public void Draw(CanvasAnimatedDrawEventArgs args) {
+            //Matrix3x2 push = args.DrawingSession.Transform;
+            //args.DrawingSession.Transform = Matrix3x2.CreateScale(-1, 1, new Vector2(Position.X + (float)TextLayout.LayoutBounds.Width / 2, Position.Y + (float)TextLayout.LayoutBounds.Height / 2)) * Matrix3x2.CreateRotation((float)(_rotation * Math.PI / 180), new Vector2(Position.X + (float)TextLayout.LayoutBounds.Width / 2, Position.Y + (float)TextLayout.LayoutBounds.Height / 2));
             args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(Position.X, Position.Y + _offsetY), _color);
+            //args.DrawingSession.Transform = push;
         }
 
         public void Update(CanvasAnimatedUpdateEventArgs args) {
             _offsetY = (int)(7 * Math.Sin(++loopCount * 0.05));
             //int y = (int)(_position.Y + 200 * Math.Sin(i * .20 + loopCount * 0.01));
+            _rotation = (_rotation + 1) % 360;
         }
     }
 }

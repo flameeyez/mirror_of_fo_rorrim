@@ -28,9 +28,9 @@ namespace win2d_speech_recognition {
         public CanvasTextLayout TextLayout { get; set; }
         private static Vector2 _shadowOffset = new Vector2(10, 10);
 
+        private int _rotation;
         private int _velocityX = 1;
         private int _velocityY = 1;
-        private Vector2 _offset;
         private Rect _boundary;
         private static Random r = new Random(DateTime.Now.Millisecond);
 
@@ -39,16 +39,23 @@ namespace win2d_speech_recognition {
             _color = color;
             Character = c;
             TextLayout = new CanvasTextLayout(device, c.ToString(), HarryP, 0, 0);
-            _offset = Vector2.Zero;
             _boundary = new Rect(0, 0, 100, 150);
         }
 
         public void Draw(CanvasAnimatedDrawEventArgs args, Vector2 position) {
-            args.DrawingSession.DrawTextLayout(TextLayout, position + _offset, _color);
+            args.DrawingSession.DrawTextLayout(TextLayout, position, _color);
+        }
+
+        public void DrawMirrored(CanvasAnimatedDrawEventArgs args, Vector2 position) {
+            Matrix3x2 push = args.DrawingSession.Transform;
+            args.DrawingSession.Transform = Matrix3x2.CreateRotation((float)(_rotation * Math.PI / 180), position) * Matrix3x2.CreateScale(-1, 1, position);
+            args.DrawingSession.DrawTextLayout(TextLayout, position, _color);
+            args.DrawingSession.Transform = push;
         }
 
         public void Update(CanvasAnimatedUpdateEventArgs args) {
             loopCount++;
+            _rotation = (_rotation + 1) % 360;
         }
     }
 }

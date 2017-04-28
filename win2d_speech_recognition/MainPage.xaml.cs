@@ -2,6 +2,7 @@
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -21,12 +22,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
 namespace win2d_speech_recognition {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page {
         public MainPage() {
             this.InitializeComponent();
@@ -45,32 +41,29 @@ namespace win2d_speech_recognition {
         private List<FloatingAnimatedString> FloatyWords = new List<FloatingAnimatedString>();
         private object FloatyWordsLock = new object();
         private SpeechRecognizer speechRecognizer;
-        private List<string> SpeechResults = new List<string>();
-        private object SpeechResultsLock = new object();
         private List<PalindromePuzzle> Puzzles = new List<PalindromePuzzle>();
         private int nIndex = 0;
         private Queue<string> FloatingWordsQueue = new Queue<string>();
 
         private void canvasMain_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args) {
-            Puzzles[nIndex].Draw(args);
+            Stopwatch s = Stopwatch.StartNew();
 
-            int x = 1500;
-            int y = 100;
-            lock (SpeechResultsLock) {
-                foreach (string str in SpeechResults) {
-                    args.DrawingSession.DrawText(str, new Vector2(x, y), Colors.White);
-                    y += 20;
-                }
-            }
+            Puzzles[nIndex].Draw(args);
 
             lock (FloatyWordsLock) {
                 foreach (FloatingAnimatedString str in FloatyWords) {
                     str.Draw(args);
                 }
             }
+
+            s.Stop();
+            Debug.LastDrawMilliseconds = s.ElapsedMilliseconds;
+            Debug.Draw(args);
         }
 
         private async void canvasMain_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args) {
+            Stopwatch s = Stopwatch.StartNew();
+
             Puzzles[nIndex].Update(args);
 
             lock (FloatyWordsLock) {
@@ -87,6 +80,10 @@ namespace win2d_speech_recognition {
                     }
                 }
             }
+
+            s.Stop();
+            Debug.LastUpdateMilliseconds = s.ElapsedMilliseconds;
+            Debug.Update(args);
         }
 
         private async void canvasMain_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args) {
@@ -104,20 +101,17 @@ namespace win2d_speech_recognition {
         }
 
         private async void ContinuousRecognitionSession_Completed(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionCompletedEventArgs args) {
-            lock (SpeechResultsLock) {
-                //SpeechResults.Add("Speech recognition has ended.");
-                //SpeechResults.Add("Status: " + args.Status.ToString());
-                //SpeechResults.Add("Restarting recognition sequence.");
-            }
+            Debug.AddTimedString("Speech recognition has ended.");
+            Debug.AddTimedString("Status: " + args.Status.ToString());
+            Debug.AddTimedString("Restarting recognition sequence.");
             await speechRecognizer.ContinuousRecognitionSession.StartAsync(SpeechContinuousRecognitionMode.Default);
         }
 
         private void ContinuousRecognitionSession_ResultGenerated(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args) {
             if (args.Result.Confidence == SpeechRecognitionConfidence.Medium ||
               args.Result.Confidence == SpeechRecognitionConfidence.High) {
-                lock (SpeechResultsLock) {
-                    // SpeechResults.Add("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
-                }
+
+                Debug.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
 
                 if (args.Result.Text == Puzzles[nIndex].Solution) {
                     // solved!
@@ -129,12 +123,17 @@ namespace win2d_speech_recognition {
                 else {
                     // build a floaty word
                     lock (FloatyWordsLock) {
+                        // this bit adds the same string twice (normal + mirrored)
+                        //for(int i = 0; i < 10; i++) {
+                        //    FloatyWords.Add(new FloatingAnimatedString(canvasMain.Device, args.Result.Text, FloatingAnimatedString.DRAW_STYLE.NORMAL));
+                        //    FloatyWords.Add(new FloatingAnimatedString(canvasMain.Device, args.Result.Text, FloatingAnimatedString.DRAW_STYLE.MIRRORED));
+                        //}
+
+                        // this bit splits the string into words and enqueues; mirroring is assigned when object is created (on dequeue; drawStyle = DEALERS_CHOICE)
                         string[] words = args.Result.Text.Split(" ".ToCharArray());
-                        foreach(string word in words) {
+                        foreach (string word in words) {
                             FloatingWordsQueue.Enqueue(word);
-                            //FloatyWords.Add(new FloatingAnimatedString(canvasMain.Device, word));
                         }
-                        //FloatyWords.Add(new FloatingAnimatedString(canvasMain.Device, args.Result.Text));
                     }
                 }
             }

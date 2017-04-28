@@ -20,10 +20,10 @@ namespace win2d_speech_recognition {
             Strings.Add("Draw: " + LastDrawMilliseconds.ToString() + "ms");
             Strings.Add("Update: " + LastUpdateMilliseconds.ToString() + "ms");
 
-            int x = 1500;
+            int x = 1410;
             int y = 10;
             int padding = 5;
-            int width = 300;
+            int width = 500;
             int height = (Strings.Count + 1) * 20;
             args.DrawingSession.FillRectangle(new Windows.Foundation.Rect(x - padding, y - padding, width, height), Colors.Gray);
             args.DrawingSession.DrawRoundedRectangle(new Windows.Foundation.Rect(x - padding, y - padding, width, height), 3, 3, Colors.White);
