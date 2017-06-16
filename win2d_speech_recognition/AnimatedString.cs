@@ -16,12 +16,21 @@ namespace win2d_speech_recognition {
         protected static int _lineBuffer = 20;
         protected List<AnimatedLine> Lines = new List<AnimatedLine>();
 
-        public AnimatedString(CanvasDevice device, string str) {
+        public AnimatedString(CanvasDevice device, string str, string solution) {
             string[] words = str.Split(" ".ToCharArray());
 
             AnimatedLine line = new AnimatedLine();
             for (int i = 0; i < words.Length; i++) {
-                AnimatedWord currentWord = new AnimatedWord(device, words[i], i % 2 == 0 ? DarkColor : LightColor);
+                Color color = i % 2 == 0 ? DarkColor : LightColor;
+
+                if (words[i] == solution) { color = Colors.Yellow; }
+                string strReverse = new string(solution.ToCharArray().Reverse().ToArray());
+                if (words[i] == strReverse) {
+                    color = Colors.Green;
+                }
+
+                AnimatedWord currentWord = new AnimatedWord(device, words[i], color);
+
                 if (line.Width + currentWord.Width >= 1800) {
                     Lines.Add(line);
                     line = new AnimatedLine();
@@ -36,7 +45,7 @@ namespace win2d_speech_recognition {
             int y = (1080 - totalHeight) / 2;
 
             // center each line
-            foreach(AnimatedLine l in Lines) {
+            foreach (AnimatedLine l in Lines) {
                 l.SetPosition(y: y);
                 y += l.Height + _lineBuffer;
             }

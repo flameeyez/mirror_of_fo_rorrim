@@ -25,7 +25,7 @@ namespace win2d_speech_recognition {
         private DRAW_STYLE _drawStyle;
 
         public FloatingAnimatedString(CanvasDevice device, string str, DRAW_STYLE drawStyle = DRAW_STYLE.DEALERS_CHOICE) {
-            byte opacity = (byte)(10 + r.Next(10));
+            byte opacity = (byte)(30 + r.Next(10));
 
             if (drawStyle == DRAW_STYLE.DEALERS_CHOICE) {
                 switch (r.Next(2)) {

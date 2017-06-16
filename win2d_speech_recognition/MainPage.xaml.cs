@@ -113,11 +113,15 @@ namespace win2d_speech_recognition {
 
                 Debug.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
 
-                if (args.Result.Text == Puzzles[nIndex].Solution) {
+                // if (args.Result.Text == Puzzles[nIndex].Solution) {
                     // solved!
                     // cancel speech recognition
                     // set solution animation in motion
                     // let update handle state and restart speech recognition when ready
+
+                // }
+
+                if (args.Result.Text.Split(" ".ToCharArray()).Contains(Puzzles[nIndex].Solution)) {
                     nIndex = (nIndex + 1) % Puzzles.Count;
                 }
                 else {

@@ -19,7 +19,7 @@ namespace win2d_speech_recognition {
         public PalindromePuzzle(CanvasDevice device, string puzzle, string solution) {
             _puzzle = puzzle;
             _solution = solution;
-            AnimatedString = new AnimatedString(device, puzzle);
+            AnimatedString = new AnimatedString(device, puzzle, solution);
         }
 
         public void Draw(CanvasAnimatedDrawEventArgs args) {
