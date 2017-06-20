@@ -13,6 +13,15 @@ namespace win2d_speech_recognition {
         private static Random r;
         private int loopCount;
 
+        public bool Done {
+            get {
+                foreach(AnimatedCharacter c in _characters) {
+                    if (!c.Done) { return false; }
+                }
+                return true;
+            }
+        }
+
         static AnimatedWord() {
             r = new Random((int)DateTime.Now.Ticks);
         }
@@ -56,10 +65,36 @@ namespace win2d_speech_recognition {
 
         public override string ToString() {
             StringBuilder sb = new StringBuilder();
-            foreach(AnimatedCharacter c in _characters) {
-                sb.Append(c.Character);
+            foreach (AnimatedCharacter c in _characters) {
+                if (char.IsLetter(c.Character)) {
+                    sb.Append(c.Character);
+                }
             }
             return sb.ToString();
+        }
+
+        public bool Equals(string str) {
+            return ToString().Equals(str);
+        }
+
+        public void Highlight() {
+            foreach (AnimatedCharacter c in _characters) {
+                if (char.IsLetter(c.Character)) {
+                    c.State = AnimatedCharacter.STATE.GROWING;
+                }
+            }
+        }
+
+        public void Solve() {
+            foreach(AnimatedCharacter c in _characters) {
+                c.State = AnimatedCharacter.STATE.SOLVE_CONVERGE_TO_CENTER;
+            }
+        }
+
+        public void Refresh() {
+            foreach(AnimatedCharacter c in _characters) {
+                c.Refresh();
+            }
         }
     }
 }

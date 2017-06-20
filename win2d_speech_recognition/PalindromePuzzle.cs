@@ -11,15 +11,24 @@ namespace win2d_speech_recognition {
     class PalindromePuzzle {
         private string _puzzle;
         public string Puzzle { get { return _puzzle; } }
+        private string _obscurer;
+        public string Obscurer { get { return _obscurer; } }
         private string _solution;
         public string Solution { get { return _solution; } }
 
-        private AnimatedString AnimatedString;
+        public bool Solved { get; set; }
+        public bool Done { get { return AnimatedString.Done; } }
 
-        public PalindromePuzzle(CanvasDevice device, string puzzle, string solution) {
+        private AnimatedString AnimatedString;
+        private TimeSpan _timeSinceLastHighlight;
+        private static TimeSpan _highlightThreshold = new TimeSpan(0, 0, 10);
+
+        public PalindromePuzzle(CanvasDevice device, string puzzle, string obscurer, string solution) {
             _puzzle = puzzle;
+            _obscurer = obscurer;
             _solution = solution;
-            AnimatedString = new AnimatedString(device, puzzle, solution);
+            AnimatedString = new AnimatedString(device, puzzle);
+            Solved = false;
         }
 
         public void Draw(CanvasAnimatedDrawEventArgs args) {
@@ -28,6 +37,28 @@ namespace win2d_speech_recognition {
 
         public void Update(CanvasAnimatedUpdateEventArgs args) {
             AnimatedString.Update(args);
+            if (!Solved) {
+                _timeSinceLastHighlight += args.Timing.ElapsedTime;
+                if (_timeSinceLastHighlight > _highlightThreshold) {
+                    HighlightObscurer();
+                    _timeSinceLastHighlight = TimeSpan.Zero;
+                }
+            }
+        }
+
+        public void HighlightObscurer() {
+            AnimatedString.HighlightWord(Obscurer);
+        }
+
+        public void Refresh() {
+            _timeSinceLastHighlight = TimeSpan.Zero;
+            AnimatedString.Refresh();
+            Solved = false;
+        }
+
+        public void Solve() {
+            Solved = true;
+            AnimatedString.Solve();
         }
     }
 }

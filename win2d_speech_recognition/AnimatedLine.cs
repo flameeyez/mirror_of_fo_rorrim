@@ -10,6 +10,16 @@ namespace win2d_speech_recognition {
     class AnimatedLine {
         public static int SpaceBuffer = 100;
         private List<AnimatedWord> Words = new List<AnimatedWord>();
+
+        public bool Done {
+            get {
+                foreach(AnimatedWord word in Words) {
+                    if (!word.Done) { return false; }
+                }
+                return true;
+            }
+        }
+
         public int Width {
             get {
                 if (Words.Count == 0) { return 0; }
@@ -47,6 +57,25 @@ namespace win2d_speech_recognition {
             foreach (AnimatedWord word in Words) {
                 word.SetPosition(new Vector2(x, y));
                 x += word.Width + AnimatedLine.SpaceBuffer;
+            }
+        }
+
+        public AnimatedWord GetWord(string strWord) {
+            foreach(AnimatedWord word in Words) {
+                if (word.Equals(strWord)) { return word; }
+            }
+            return null;
+        }
+
+        public void Solve() {
+            foreach(AnimatedWord word in Words) {
+                word.Solve();
+            }
+        }
+
+        public void Refresh() {
+            foreach(AnimatedWord word in Words) {
+                word.Refresh();
             }
         }
     }

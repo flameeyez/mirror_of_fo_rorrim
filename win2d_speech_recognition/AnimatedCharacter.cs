@@ -12,18 +12,23 @@ using Windows.UI;
 
 namespace win2d_speech_recognition {
     class AnimatedCharacter {
-        //enum MOVE_STATE {
-        //    MOVING,
-        //    IDLE
-        //}
-        //private MOVE_STATE _moveState = MOVE_STATE.MOVING;
-        //private DateTime lastStart = DateTime.Now;
-        //private DateTime lastStop = DateTime.Now;
-        //private int lastMoveThreshold = 2000 + r.Next(2000);
-        //private int lastStopThreshold = 2000 + r.Next(2000);
-        // private int rotation = 0;
-        //private int _velocityX = 1;
-        //private int _velocityY = 1;
+        public enum STATE {
+            NORMAL,
+            GROWING,
+            SHRINKING,
+            SOLVE_CONVERGE_TO_CENTER,
+            SOLVE_FLOAT_UP,
+            DONE
+        }
+
+        public enum SOLVED_HORIZONTAL_MOVEMENT {
+            LEFT,
+            RIGHT
+        }
+
+        public STATE State { get; set; }
+        private SOLVED_HORIZONTAL_MOVEMENT HorizontalMovement { get; set; }
+        public bool Done { get { return State == STATE.DONE; } }
 
         private static CanvasTextFormat HarryP;
         static AnimatedCharacter() {
@@ -34,6 +39,7 @@ namespace win2d_speech_recognition {
         }
 
         private int _rotation;
+        private float scalingFactor = 1.0f;
 
         public int Width { get { return (int)_boundary.Width; } }
         public int Height { get { return (int)_boundary.Height; } }
@@ -50,8 +56,13 @@ namespace win2d_speech_recognition {
             set {
                 _position = value;
                 _boundary = new Rect(_position.X, _position.Y, 100, 150);
+                _solvedPosition.X = _position.X;
+                _solvedPosition.Y = _position.Y;
             }
         }
+
+        private Vector2 _solvedPosition;
+
         private Rect _boundary = new Rect(0, 0, 100, 150);
         private Color _color;
         private static Random r = new Random(DateTime.Now.Millisecond);
@@ -60,101 +71,97 @@ namespace win2d_speech_recognition {
             Character = c;
             TextLayout = new CanvasTextLayout(device, c.ToString(), HarryP, 0, 0);
             _color = color;
+            State = STATE.NORMAL;
         }
 
         public void Draw(CanvasAnimatedDrawEventArgs args) {
-            //Matrix3x2 push = args.DrawingSession.Transform;
-            //args.DrawingSession.Transform = Matrix3x2.CreateScale(-1, 1, new Vector2(Position.X + (float)TextLayout.LayoutBounds.Width / 2, Position.Y + (float)TextLayout.LayoutBounds.Height / 2)) * Matrix3x2.CreateRotation((float)(_rotation * Math.PI / 180), new Vector2(Position.X + (float)TextLayout.LayoutBounds.Width / 2, Position.Y + (float)TextLayout.LayoutBounds.Height / 2));
-            args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(Position.X, Position.Y + _offsetY), _color);
-            //args.DrawingSession.Transform = push;
+            Color drawColor = _color;
+            Matrix3x2 push = args.DrawingSession.Transform;
+            switch (State) {
+                case STATE.GROWING:
+                case STATE.SHRINKING:
+                    drawColor = Colors.Yellow;
+                    args.DrawingSession.Transform = Matrix3x2.CreateScale(scalingFactor, scalingFactor, new Vector2(Position.X + (float)TextLayout.LayoutBounds.Width / 2, Position.Y + (float)TextLayout.LayoutBounds.Height / 2));// * Matrix3x2.CreateRotation((float)(_rotation * Math.PI / 180), new Vector2(Position.X + (float)TextLayout.LayoutBounds.Width / 2, Position.Y + (float)TextLayout.LayoutBounds.Height / 2));
+                    args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(Position.X, Position.Y + _offsetY), drawColor);
+                    args.DrawingSession.Transform = push;
+                    break;
+                case STATE.NORMAL:
+                    args.DrawingSession.Transform = Matrix3x2.CreateScale(scalingFactor, scalingFactor, new Vector2(Position.X + (float)TextLayout.LayoutBounds.Width / 2, Position.Y + (float)TextLayout.LayoutBounds.Height / 2));// * Matrix3x2.CreateRotation((float)(_rotation * Math.PI / 180), new Vector2(Position.X + (float)TextLayout.LayoutBounds.Width / 2, Position.Y + (float)TextLayout.LayoutBounds.Height / 2));
+                    args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(Position.X, Position.Y + _offsetY), drawColor);
+                    args.DrawingSession.Transform = push;
+                    break;
+                case STATE.SOLVE_CONVERGE_TO_CENTER:
+                case STATE.SOLVE_FLOAT_UP:
+                    drawColor = Colors.Green;
+                    args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(_solvedPosition.X, _solvedPosition.Y + _offsetY), drawColor);
+                    break;
+            }
         }
 
         public void Update(CanvasAnimatedUpdateEventArgs args) {
             _offsetY = (int)(7 * Math.Sin(++loopCount * 0.05));
-            //int y = (int)(_position.Y + 200 * Math.Sin(i * .20 + loopCount * 0.01));
             _rotation = (_rotation + 1) % 360;
+
+            switch (State) {
+                case STATE.GROWING:
+                    scalingFactor += 0.1f;
+                    if (scalingFactor >= 1.5f) { State = STATE.SHRINKING; }
+                    break;
+                case STATE.SHRINKING:
+                    scalingFactor -= 0.1f;
+                    if (scalingFactor <= 1.0f) { scalingFactor = 1.0f; State = STATE.NORMAL; }
+                    break;
+                case STATE.SOLVE_CONVERGE_TO_CENTER:
+                    if (_solvedPosition.X < 1920 / 2) {
+                        _solvedPosition.X += 10;
+                    }
+                    else if (_solvedPosition.X > 1920 / 2) {
+                        _solvedPosition.X -= 10;
+                    }
+
+                    if ((_solvedPosition.X > 1920 / 2 - (Width * 2))
+                        && _solvedPosition.X < 1920 / 2 + (Width * 2)) {
+                        State = STATE.SOLVE_FLOAT_UP;
+                        switch (r.Next(2)) {
+                            case 0:
+                                HorizontalMovement = SOLVED_HORIZONTAL_MOVEMENT.LEFT;
+                                break;
+                            case 1:
+                                HorizontalMovement = SOLVED_HORIZONTAL_MOVEMENT.RIGHT;
+                                break;
+                        }
+                    }
+                    break;
+                case STATE.SOLVE_FLOAT_UP:
+                    switch (HorizontalMovement) {
+                        case SOLVED_HORIZONTAL_MOVEMENT.LEFT:
+                            _solvedPosition.X -= 5 + r.Next(10);
+                            if ((_solvedPosition.X < (1920 / 2) - 100) && r.Next(10) == 0) {
+                                HorizontalMovement = SOLVED_HORIZONTAL_MOVEMENT.RIGHT;
+                            }
+                            break;
+                        case SOLVED_HORIZONTAL_MOVEMENT.RIGHT:
+                            _solvedPosition.X += 5 + r.Next(10);
+                            if ((_solvedPosition.X > (1920 / 2) + 100) && r.Next(10) == 0) {
+                                HorizontalMovement = SOLVED_HORIZONTAL_MOVEMENT.LEFT;
+                            }
+                            break;
+                    }
+
+                    _solvedPosition.Y -= 5;
+
+                    if (_solvedPosition.Y < -Height) {
+                        State = STATE.DONE;
+                    }
+                    break;
+            }
+        }
+
+        public void Refresh() {
+            loopCount = 0;
+            State = STATE.NORMAL;
+            _solvedPosition.X = Position.X;
+            _solvedPosition.Y = Position.Y;
         }
     }
 }
-
-//switch (_moveState) {
-//    case MOVE_STATE.MOVING:
-//        switch (r.Next(100)) {
-//            case 0:
-//                _velocityX += 1;
-//                break;
-//            case 1:
-//                _velocityX -= 1;
-//                break;
-//            case 2:
-//                _velocityY += 1;
-//                break;
-//            case 3:
-//                _velocityY += -1;
-//                break;
-//            default:
-//                //_velocityX = 0;
-//                //_velocityY = 0;
-//                break;
-//        }
-
-//        int threshold = 1;
-//        _velocityX = Math.Min(threshold, Math.Max(-threshold, _velocityX));
-//        _velocityY = Math.Min(threshold, Math.Max(-threshold, _velocityY));
-
-//        double _offsetX = _offset.X + _velocityX;
-//        if (_offsetX + TextLayout.LayoutBounds.Width > _boundary.Right) {
-//            _offsetX = _boundary.Right - TextLayout.LayoutBounds.Width;
-//            _velocityX = -_velocityX;
-
-//            if (r.Next(10) == 0) {
-//                _moveState = MOVE_STATE.IDLE;
-//                lastStop = DateTime.Now;
-//            }
-//        }
-//        else if (_offsetX < _boundary.Left) {
-//            _offsetX = _boundary.Left;
-//            _velocityX = -_velocityX;
-
-//            if (r.Next(10) == 0) {
-//                _moveState = MOVE_STATE.IDLE;
-//                lastStop = DateTime.Now;
-//            }
-//        }
-
-//        double _offsetY = _offset.Y + _velocityY;
-//        if (_offsetY + TextLayout.LayoutBounds.Height > _boundary.Bottom) {
-//            _offsetY = _boundary.Bottom - TextLayout.LayoutBounds.Height;
-//            _velocityY = -_velocityY;
-
-//            if (r.Next(10) == 0) {
-//                _moveState = MOVE_STATE.IDLE;
-//                lastStop = DateTime.Now;
-//            }
-//        }
-//        else if (_offsetY < _boundary.Top) {
-//            _offsetY = _boundary.Top;
-//            _velocityY = -_velocityY;
-
-//            if (r.Next(10) == 0) {
-//                _moveState = MOVE_STATE.IDLE;
-//                lastStop = DateTime.Now;
-//            }
-//        }
-
-//        _offset = new Vector2((float)_offsetX, (float)_offsetY);
-
-//        TimeSpan startDelta = DateTime.Now - lastStart;
-//        if (startDelta.TotalMilliseconds > lastMoveThreshold && r.Next(100) == 0) {
-//            _moveState = MOVE_STATE.IDLE;
-//            lastStop = DateTime.Now;
-//        }
-//        break;
-//    case MOVE_STATE.IDLE:
-//        TimeSpan stopDelta = DateTime.Now - lastStop;
-//        if (stopDelta.TotalMilliseconds > lastStopThreshold && r.Next(100) == 0) {
-//            _moveState = MOVE_STATE.MOVING;
-//            lastStart = DateTime.Now;
-//        }
-//        break;
-//}

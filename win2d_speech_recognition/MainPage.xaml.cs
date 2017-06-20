@@ -34,6 +34,9 @@ namespace win2d_speech_recognition {
                 case Windows.System.VirtualKey.Space:
                     nIndex = (nIndex + 1) % Puzzles.Count;
                     break;
+                case Windows.System.VirtualKey.G:
+                    Puzzles[nIndex].HighlightObscurer();
+                    break;
             }
         }
 
@@ -64,7 +67,14 @@ namespace win2d_speech_recognition {
         private async void canvasMain_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args) {
             Stopwatch s = Stopwatch.StartNew();
 
-            Puzzles[nIndex].Update(args);
+            // switch to next puzzle if previous is done
+            if (Puzzles[nIndex].Done) {
+                nIndex = (nIndex + 1) % Puzzles.Count;
+                Puzzles[nIndex].Refresh();
+            }
+            else {
+                Puzzles[nIndex].Update(args);
+            }            
 
             lock (FloatyWordsLock) {
                 if (FloatingWordsQueue.Count > 0 && r.Next(50) == 0) {
@@ -112,17 +122,8 @@ namespace win2d_speech_recognition {
               args.Result.Confidence == SpeechRecognitionConfidence.High) {
 
                 Debug.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
-
-                // if (args.Result.Text == Puzzles[nIndex].Solution) {
-                    // solved!
-                    // cancel speech recognition
-                    // set solution animation in motion
-                    // let update handle state and restart speech recognition when ready
-
-                // }
-
                 if (args.Result.Text.Split(" ".ToCharArray()).Contains(Puzzles[nIndex].Solution)) {
-                    nIndex = (nIndex + 1) % Puzzles.Count;
+                    Puzzles[nIndex].Solve();
                 }
                 else {
                     // build a floaty word
@@ -144,9 +145,9 @@ namespace win2d_speech_recognition {
         }
 
         private void LoadPuzzles(CanvasDevice device) {
-            Puzzles.Add(new PalindromePuzzle(device, "Sore was I ere I saw Eros.", "saw"));
-            Puzzles.Add(new PalindromePuzzle(device, "A man, a plan, a canal, Panama", "canal"));
-            Puzzles.Add(new PalindromePuzzle(device, "Never a foot too far, even.", "foot"));
+            Puzzles.Add(new PalindromePuzzle(device, "Sore was I ere I noticed Eros.", "noticed", "saw"));
+            Puzzles.Add(new PalindromePuzzle(device, "A man, a plan, a passage, Panama", "passage", "canal"));
+            Puzzles.Add(new PalindromePuzzle(device, "Never a foot too distant, even.", "distant", "far"));
         }
 
         private void canvasMain_PointerMoved(object sender, PointerRoutedEventArgs e) {
