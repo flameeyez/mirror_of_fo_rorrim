@@ -12,6 +12,7 @@ using Windows.UI;
 
 namespace win2d_speech_recognition {
     class FloatingAnimatedCharacter {
+        #region Static
         private static CanvasTextFormat HarryP;
         static FloatingAnimatedCharacter() {
             HarryP = new CanvasTextFormat();
@@ -19,43 +20,51 @@ namespace win2d_speech_recognition {
             HarryP.FontSize = 60;
             HarryP.WordWrapping = CanvasWordWrapping.NoWrap;
         }
+        private static Random r = new Random(DateTime.Now.Millisecond);
+        #endregion
 
+        #region Position / Movement / Color
         private int loopCount;
-
-        public int Width { get { return (int)_boundary.Width; } }
-        public int Height { get { return (int)_boundary.Height; } }
-        public char Character { get; set; }
-        public CanvasTextLayout TextLayout { get; set; }
-        private static Vector2 _shadowOffset = new Vector2(10, 10);
-
         private int _rotation;
         private int _velocityX = 1;
         private int _velocityY = 1;
-        private Rect _boundary;
-        private static Random r = new Random(DateTime.Now.Millisecond);
+        #endregion
 
+        #region Bounds
+        private Rect _boundary;
+        public int Width { get { return (int)_boundary.Width; } }
+        public int Height { get { return (int)_boundary.Height; } }
+        #endregion
+
+        #region Character
         private Color _color;
+        public char Character { get; set; }
+        public CanvasTextLayout TextLayout { get; set; }
+        #endregion
+
+        #region Constructor
         public FloatingAnimatedCharacter(CanvasDevice device, char c, Color color) {
             _color = color;
             Character = c;
             TextLayout = new CanvasTextLayout(device, c.ToString(), HarryP, 0, 0);
             _boundary = new Rect(0, 0, 100, 150);
         }
+        #endregion
 
+        #region Draw / Update
         public void Draw(CanvasAnimatedDrawEventArgs args, Vector2 position) {
             args.DrawingSession.DrawTextLayout(TextLayout, position, _color);
         }
-
         public void DrawMirrored(CanvasAnimatedDrawEventArgs args, Vector2 position) {
             Matrix3x2 push = args.DrawingSession.Transform;
             args.DrawingSession.Transform = Matrix3x2.CreateRotation((float)(_rotation * Math.PI / 180), position) * Matrix3x2.CreateScale(-1, 1, position);
             args.DrawingSession.DrawTextLayout(TextLayout, position, _color);
             args.DrawingSession.Transform = push;
         }
-
         public void Update(CanvasAnimatedUpdateEventArgs args) {
             loopCount++;
             _rotation = (_rotation + 1) % 360;
         }
+        #endregion
     }
 }

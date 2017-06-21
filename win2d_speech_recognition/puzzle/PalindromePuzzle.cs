@@ -9,6 +9,13 @@ using System.Threading.Tasks;
 
 namespace win2d_speech_recognition {
     class PalindromePuzzle {
+        public enum SOLVE_FADEOUT_TYPE {
+            SPIRAL_UP,
+            FLYOUT
+        }
+
+        private static Random r = new Random(DateTime.Now.Millisecond);
+
         private string _puzzle;
         public string Puzzle { get { return _puzzle; } }
         private string _obscurer;
@@ -28,7 +35,7 @@ namespace win2d_speech_recognition {
             _obscurer = obscurer;
             _solution = solution;
             AnimatedString = new AnimatedString(device, puzzle);
-            Solved = false;
+            Refresh();
         }
 
         public void Draw(CanvasAnimatedDrawEventArgs args) {
@@ -58,7 +65,16 @@ namespace win2d_speech_recognition {
 
         public void Solve() {
             Solved = true;
-            AnimatedString.Solve();
+
+            // select random fadeout type
+            Array values = Enum.GetValues(typeof(SOLVE_FADEOUT_TYPE));
+            SOLVE_FADEOUT_TYPE fadeoutType = (SOLVE_FADEOUT_TYPE)values.GetValue(r.Next(values.Length));
+            // AnimatedString.Solve(fadeoutType);
+            AnimatedString.Solve(SOLVE_FADEOUT_TYPE.FLYOUT);
+        }
+
+        public void FadeIn() {
+            AnimatedString.FadeIn();
         }
     }
 }

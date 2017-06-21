@@ -32,7 +32,9 @@ namespace win2d_speech_recognition {
         private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args) {
             switch (args.VirtualKey) {
                 case Windows.System.VirtualKey.Space:
-                    nIndex = (nIndex + 1) % Puzzles.Count;
+                    Puzzles[nIndex].Solve();
+                    //nIndex = (nIndex + 1) % Puzzles.Count;
+                    //Puzzles[nIndex].Refresh();
                     break;
                 case Windows.System.VirtualKey.G:
                     Puzzles[nIndex].HighlightObscurer();

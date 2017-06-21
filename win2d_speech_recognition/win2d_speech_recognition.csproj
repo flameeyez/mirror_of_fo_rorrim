@@ -92,20 +92,20 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AnimatedCharacter.cs" />
-    <Compile Include="AnimatedLine.cs" />
-    <Compile Include="AnimatedString.cs" />
-    <Compile Include="AnimatedWord.cs" />
+    <Compile Include="puzzle\AnimatedCharacter.cs" />
+    <Compile Include="puzzle\AnimatedLine.cs" />
+    <Compile Include="puzzle\AnimatedString.cs" />
+    <Compile Include="puzzle\AnimatedWord.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="debug\Debug.cs" />
-    <Compile Include="FloatingAnimatedCharacter.cs" />
-    <Compile Include="FloatingAnimatedString.cs" />
+    <Compile Include="puzzle\FloatingAnimatedCharacter.cs" />
+    <Compile Include="puzzle\FloatingAnimatedString.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PalindromePuzzle.cs" />
+    <Compile Include="puzzle\PalindromePuzzle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="debug\TimedString.cs" />
   </ItemGroup>
@@ -116,6 +116,9 @@
     <None Include="win2d_speech_recognition_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="mp3\background.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

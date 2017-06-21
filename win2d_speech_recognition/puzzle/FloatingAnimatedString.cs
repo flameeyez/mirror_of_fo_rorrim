@@ -10,20 +10,32 @@ using Windows.UI;
 
 namespace win2d_speech_recognition {
     class FloatingAnimatedString {
+        #region Style
         public enum DRAW_STYLE {
             NORMAL,
             MIRRORED,
             DEALERS_CHOICE
         }
+        private DRAW_STYLE _drawStyle;
+        #endregion
 
+        #region Static
         private static Random r = new Random(DateTime.Now.Millisecond);
+        #endregion
+
+        #region Position / Movement / Bounds
         private Vector2 _position;
-        private List<FloatingAnimatedCharacter> Characters = new List<FloatingAnimatedCharacter>();
-        private int loopCount;
         private int _width { get { return Characters.Sum(x => x.Width); } }
         private int _velocityX;
-        private DRAW_STYLE _drawStyle;
+        private int loopCount;
+        public bool IsOutOfBounds { get { return _position.X > 2000 || _position.X < -_width - 50; } }
+        #endregion
 
+        #region Characters
+        private List<FloatingAnimatedCharacter> Characters = new List<FloatingAnimatedCharacter>();
+        #endregion
+
+        #region Constructor
         public FloatingAnimatedString(CanvasDevice device, string str, DRAW_STYLE drawStyle = DRAW_STYLE.DEALERS_CHOICE) {
             byte opacity = (byte)(30 + r.Next(10));
 
@@ -68,9 +80,9 @@ namespace win2d_speech_recognition {
                     throw new Exception();
             }
         }
+        #endregion        
 
-        public bool IsOutOfBounds { get { return _position.X > 2000 || _position.X < -_width - 50; } }
-
+        #region Draw / Update
         public void Draw(CanvasAnimatedDrawEventArgs args) {
             int x = (int)_position.X;
             for (int i = 0; i < Characters.Count; i++) {
@@ -85,10 +97,10 @@ namespace win2d_speech_recognition {
                 x += Characters[i].Width;
             }
         }
-
         public void Update(CanvasAnimatedUpdateEventArgs args) {
             _position.X += _velocityX;
             loopCount++;
         }
+        #endregion
     }
 }

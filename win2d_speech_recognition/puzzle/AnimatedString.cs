@@ -10,21 +10,17 @@ using Windows.UI;
 
 namespace win2d_speech_recognition {
     class AnimatedString {
+        #region Static
         public static Color DarkColor = Color.FromArgb(255, 150, 150, 150);
         public static Color LightColor = Color.FromArgb(255, 255, 255, 255);
-
-        public bool Done {
-            get {
-                foreach(AnimatedLine line in Lines) {
-                    if (!line.Done) { return false; }
-                }
-                return true;
-            }
-        }
-
         protected static int _lineBuffer = 20;
-        protected List<AnimatedLine> Lines = new List<AnimatedLine>();
+        #endregion
 
+        #region Lines
+        protected List<AnimatedLine> Lines = new List<AnimatedLine>();
+        #endregion
+
+        #region Constructor
         public AnimatedString(CanvasDevice device, string str) {
             string[] words = str.Split(" ".ToCharArray());
 
@@ -50,19 +46,22 @@ namespace win2d_speech_recognition {
                 y += l.Height + _lineBuffer;
             }
         }
+        #endregion
 
+        #region Draw / Update
         public virtual void Draw(CanvasAnimatedDrawEventArgs args) {
             foreach (AnimatedLine line in Lines) {
                 line.Draw(args);
             }
         }
-
         public virtual void Update(CanvasAnimatedUpdateEventArgs args) {
             foreach (AnimatedLine line in Lines) {
                 line.Update(args);
             }
         }
+        #endregion
 
+        #region State
         public void HighlightWord(string str) {
             foreach (AnimatedLine line in Lines) {
                 AnimatedWord word = line.GetWord(str);
@@ -71,17 +70,29 @@ namespace win2d_speech_recognition {
                 }
             }
         }
-
-        public void Solve() {
+        public void Solve(PalindromePuzzle.SOLVE_FADEOUT_TYPE fadeoutType) {
             foreach(AnimatedLine line in Lines) {
-                line.Solve();
+                line.Solve(fadeoutType);
             }
         }
-
         public void Refresh() {
             foreach(AnimatedLine line in Lines) {
                 line.Refresh();
             }
         }
+        public bool Done {
+            get {
+                foreach (AnimatedLine line in Lines) {
+                    if (!line.Done) { return false; }
+                }
+                return true;
+            }
+        }
+        public void FadeIn() {
+            foreach(AnimatedLine line in Lines) {
+                line.FadeIn();
+            }
+        }
+        #endregion
     }
 }
