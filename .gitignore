@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 /win2d_speech_recognition/videos/background.mp4
 /win2d_speech_recognition/videos/background.m2v
+/win2d_speech_recognition/mp3/background.mp3
