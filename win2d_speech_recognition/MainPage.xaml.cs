@@ -11,7 +11,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 using Windows.Media.SpeechRecognition;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -32,9 +35,7 @@ namespace win2d_speech_recognition {
         private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args) {
             switch (args.VirtualKey) {
                 case Windows.System.VirtualKey.Space:
-                    Puzzles[nIndex].Solve();
-                    //nIndex = (nIndex + 1) % Puzzles.Count;
-                    //Puzzles[nIndex].Refresh();
+                    SolveCurrentPuzzle();
                     break;
                 case Windows.System.VirtualKey.G:
                     Puzzles[nIndex].HighlightObscurer();
@@ -42,6 +43,8 @@ namespace win2d_speech_recognition {
             }
         }
 
+        private MediaPlayer music;
+        private MediaPlayer whoosh;
         private Random r = new Random(DateTime.Now.Millisecond);
         private List<FloatingAnimatedString> FloatyWords = new List<FloatingAnimatedString>();
         private object FloatyWordsLock = new object();
@@ -110,6 +113,20 @@ namespace win2d_speech_recognition {
             speechRecognizer.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
             speechRecognizer.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.MaxValue;
             await speechRecognizer.ContinuousRecognitionSession.StartAsync(SpeechContinuousRecognitionMode.Default);
+
+            music = new MediaPlayer() {
+                Source = MediaSource.CreateFromUri(new Uri("ms-appx:///mp3/background.mp3")),
+            };
+            music.MediaEnded += Music_MediaEnded;
+            music.Play();
+
+            whoosh = new MediaPlayer() {
+                Source = MediaSource.CreateFromUri(new Uri("ms-appx:///mp3/whoosh_faster.mp3")),
+            };
+        }
+
+        private void Music_MediaEnded(MediaPlayer sender, object args) {
+            music.Play();
         }
 
         private async void ContinuousRecognitionSession_Completed(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionCompletedEventArgs args) {
@@ -125,7 +142,7 @@ namespace win2d_speech_recognition {
 
                 Debug.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
                 if (args.Result.Text.Split(" ".ToCharArray()).Contains(Puzzles[nIndex].Solution)) {
-                    Puzzles[nIndex].Solve();
+                    SolveCurrentPuzzle();
                 }
                 else {
                     // build a floaty word
@@ -162,6 +179,19 @@ namespace win2d_speech_recognition {
 
         private void canvasMain_PointerReleased(object sender, PointerRoutedEventArgs e) {
 
+        }
+
+        private void SolveCurrentPuzzle() {
+            Puzzles[nIndex].Solve();
+            
+            // if previous whoosh is still playing, reset position to beginning
+            if (whoosh.PlaybackSession.PlaybackState == MediaPlaybackState.Playing) {
+                whoosh.PlaybackSession.Position = TimeSpan.Zero;
+            }
+            else {
+                whoosh.Play();
+            }
+            
         }
     }
 }
