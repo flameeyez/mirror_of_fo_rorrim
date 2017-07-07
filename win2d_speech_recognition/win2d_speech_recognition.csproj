@@ -92,6 +92,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="background\BackgroundWords.cs" />
+    <Compile Include="Music.cs" />
+    <Compile Include="puzzle\Puzzle.cs" />
     <Compile Include="puzzle\AnimatedCharacter.cs" />
     <Compile Include="puzzle\AnimatedLine.cs" />
     <Compile Include="puzzle\AnimatedString.cs" />
@@ -108,6 +111,10 @@
     <Compile Include="puzzle\PalindromePuzzle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="debug\TimedString.cs" />
+    <Compile Include="screens\ScreenGame.cs" />
+    <Compile Include="screens\ScreenIntro.cs" />
+    <Compile Include="speech\Speech.cs" />
+    <Compile Include="Statics.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

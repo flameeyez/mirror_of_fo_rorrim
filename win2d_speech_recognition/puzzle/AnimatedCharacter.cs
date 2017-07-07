@@ -11,6 +11,11 @@ using Windows.Foundation;
 using Windows.UI;
 
 namespace win2d_speech_recognition {
+    static class Boundary {
+        public static Rect Large = new Rect(0, 0, 150, 200);
+        public static Rect Small = new Rect(0, 0, 100, 150);
+    }
+
     class AnimatedCharacter {
         #region State
         public enum STATE {
@@ -39,22 +44,29 @@ namespace win2d_speech_recognition {
         #endregion
 
         private byte opacity = 0;
+        private bool large = false;
 
         #region Static
         private static Random r = new Random(DateTime.Now.Millisecond);
         private static CanvasTextFormat HarryP;
+        private static CanvasTextFormat HarryPLarge;
         static AnimatedCharacter() {
             HarryP = new CanvasTextFormat();
             HarryP.FontFamily = "Harry P";
             HarryP.FontSize = 120;
             HarryP.WordWrapping = CanvasWordWrapping.NoWrap;
+
+            HarryPLarge = new CanvasTextFormat();
+            HarryPLarge.FontFamily = "Harry P";
+            HarryPLarge.FontSize = 160;
+            HarryPLarge.WordWrapping = CanvasWordWrapping.NoWrap;
         }
         #endregion
 
         #region Bounds
         public int Width { get { return (int)_boundary.Width; } }
         public int Height { get { return (int)_boundary.Height; } }
-        private Rect _boundary = new Rect(0, 0, 100, 150);
+        private Rect _boundary;
         #endregion
 
         #region Position
@@ -65,7 +77,7 @@ namespace win2d_speech_recognition {
             }
             set {
                 _position = value;
-                _boundary = new Rect(_position.X, _position.Y, 100, 150);
+                _boundary = large ? Boundary.Large : Boundary.Small;
                 _solvedPosition.X = _position.X;
                 _solvedPosition.Y = _position.Y;
             }
@@ -88,11 +100,14 @@ namespace win2d_speech_recognition {
         #endregion
 
         #region Constructor / Initialization
-        public AnimatedCharacter(CanvasDevice device, char c, Color color) {
+        public AnimatedCharacter(CanvasDevice device, char c, Color color, bool bUseLargeFont = false) {
             Character = c;
-            TextLayout = new CanvasTextLayout(device, c.ToString(), HarryP, 0, 0);
+            CanvasTextFormat font = bUseLargeFont ? HarryPLarge : HarryP;
+            TextLayout = new CanvasTextLayout(device, c.ToString(), font, 0, 0);
             _color = color;
             State = STATE.NORMAL;
+            large = bUseLargeFont;
+            _boundary = large ? Boundary.Large : Boundary.Small;
         }
         public void Refresh() {
             loopCount = r.Next();
@@ -202,7 +217,7 @@ namespace win2d_speech_recognition {
                     _solvedPosition.X -= _solvedVelocityX;
                     _solvedPosition.Y += _solvedVelocityY;
                     _solvedVelocityX += 2;
-                    if(_solvedPosition.X < -Width) { State = STATE.DONE; }
+                    if (_solvedPosition.X < -Width) { State = STATE.DONE; }
                     break;
                 case STATE.SOLVE_EXIT_STAGE_RIGHT:
                     _solvedPosition.X += _solvedVelocityX;

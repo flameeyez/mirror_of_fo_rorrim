@@ -68,9 +68,9 @@ namespace win2d_speech_recognition {
         #endregion
 
         #region Constructor / Initialization
-        public AnimatedWord(CanvasDevice device, string word, Color color) {
+        public AnimatedWord(CanvasDevice device, string word, Color color, bool bUseLargeFont = false) {
             foreach (char c in word) {
-                _characters.Add(new AnimatedCharacter(device, c, color));
+                _characters.Add(new AnimatedCharacter(device, c, color, bUseLargeFont));
             }
         }
         public void Refresh() {
