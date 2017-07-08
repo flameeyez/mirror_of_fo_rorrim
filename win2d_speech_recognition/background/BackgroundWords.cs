@@ -12,9 +12,11 @@ namespace win2d_speech_recognition {
         private static object FloatyWordsLock = new object();
         private static Queue<string> FloatingWordsQueue = new Queue<string>();
         private static CanvasDevice _device;
+        private static bool _initialized = false;
 
         public static void Initialize(CanvasDevice device) {
             _device = device;
+            _initialized = true;
         }
 
         public static void Draw(CanvasAnimatedDrawEventArgs args) {
@@ -26,6 +28,8 @@ namespace win2d_speech_recognition {
         }
 
         public static void Update(CanvasAnimatedUpdateEventArgs args) {
+            if (!_initialized) { return; }
+
             lock (FloatyWordsLock) {
                 if (FloatingWordsQueue.Count > 0 && Statics.r.Next(50) == 0) {
                     FloatyWords.Add(new BackgroundAnimatedString(_device, FloatingWordsQueue.Dequeue()));

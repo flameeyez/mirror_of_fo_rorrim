@@ -11,12 +11,12 @@
     <Grid Background="Black">
         <MediaPlayerElement x:Name="mediaSimple" Opacity="0.3" Width="1920" Source="ms-appx:///videos/background.mp4" AutoPlay="True" Stretch="UniformToFill" />
         <canvas:CanvasAnimatedControl x:Name="canvasMain" 
-            Draw="canvasMain_Draw"
-            Update="canvasMain_Update"
+            Draw="CanvasMain_Draw"
+            Update="CanvasMain_Update"
             ClearColor="Transparent"
-            CreateResources="canvasMain_CreateResources"
-            PointerMoved="canvasMain_PointerMoved"
-            PointerPressed="canvasMain_PointerPressed"
-            PointerReleased="canvasMain_PointerReleased" />
+            CreateResources="CanvasMain_CreateResources"
+            PointerMoved="CanvasMain_PointerMoved"
+            PointerPressed="CanvasMain_PointerPressed"
+            PointerReleased="CanvasMain_PointerReleased" />
     </Grid>
 </Page>

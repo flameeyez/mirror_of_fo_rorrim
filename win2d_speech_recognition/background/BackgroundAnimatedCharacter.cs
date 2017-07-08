@@ -15,10 +15,11 @@ namespace win2d_speech_recognition {
         #region Static
         private static CanvasTextFormat HarryP;
         static BackgroundAnimatedCharacter() {
-            HarryP = new CanvasTextFormat();
-            HarryP.FontFamily = "Harry P";
-            HarryP.FontSize = 60;
-            HarryP.WordWrapping = CanvasWordWrapping.NoWrap;
+            HarryP = new CanvasTextFormat() {
+                FontFamily = "Harry P",
+                FontSize = 60,
+                WordWrapping = CanvasWordWrapping.NoWrap
+            };
         }
         private static Random r = new Random(DateTime.Now.Millisecond);
         #endregion

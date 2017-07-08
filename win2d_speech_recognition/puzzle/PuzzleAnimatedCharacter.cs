@@ -51,15 +51,17 @@ namespace win2d_speech_recognition {
         private static CanvasTextFormat HarryP;
         private static CanvasTextFormat HarryPLarge;
         static PuzzleAnimatedCharacter() {
-            HarryP = new CanvasTextFormat();
-            HarryP.FontFamily = "Harry P";
-            HarryP.FontSize = 120;
-            HarryP.WordWrapping = CanvasWordWrapping.NoWrap;
+            HarryP = new CanvasTextFormat() {
+                FontFamily = "Harry P",
+                FontSize = 120,
+                WordWrapping = CanvasWordWrapping.NoWrap
+            };
 
-            HarryPLarge = new CanvasTextFormat();
-            HarryPLarge.FontFamily = "Harry P";
-            HarryPLarge.FontSize = 160;
-            HarryPLarge.WordWrapping = CanvasWordWrapping.NoWrap;
+            HarryPLarge = new CanvasTextFormat() {
+                FontFamily = "Harry P",
+                FontSize = 160,
+                WordWrapping = CanvasWordWrapping.NoWrap
+            };
         }
         #endregion
 
