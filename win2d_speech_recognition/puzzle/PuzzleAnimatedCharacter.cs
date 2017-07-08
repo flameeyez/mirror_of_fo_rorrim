@@ -16,7 +16,7 @@ namespace win2d_speech_recognition {
         public static Rect Small = new Rect(0, 0, 100, 150);
     }
 
-    class AnimatedCharacter {
+    class PuzzleAnimatedCharacter {
         #region State
         public enum STATE {
             NORMAL,
@@ -50,7 +50,7 @@ namespace win2d_speech_recognition {
         private static Random r = new Random(DateTime.Now.Millisecond);
         private static CanvasTextFormat HarryP;
         private static CanvasTextFormat HarryPLarge;
-        static AnimatedCharacter() {
+        static PuzzleAnimatedCharacter() {
             HarryP = new CanvasTextFormat();
             HarryP.FontFamily = "Harry P";
             HarryP.FontSize = 120;
@@ -100,7 +100,7 @@ namespace win2d_speech_recognition {
         #endregion
 
         #region Constructor / Initialization
-        public AnimatedCharacter(CanvasDevice device, char c, Color color, bool bUseLargeFont = false) {
+        public PuzzleAnimatedCharacter(CanvasDevice device, char c, Color color, bool bUseLargeFont = false) {
             Character = c;
             CanvasTextFormat font = bUseLargeFont ? HarryPLarge : HarryP;
             TextLayout = new CanvasTextLayout(device, c.ToString(), font, 0, 0);

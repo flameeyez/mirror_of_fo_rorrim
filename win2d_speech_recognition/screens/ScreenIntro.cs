@@ -9,7 +9,7 @@ using Windows.UI.Core;
 
 namespace win2d_speech_recognition {
     static class ScreenIntro {
-        private static AnimatedString str;
+        private static PuzzleAnimatedString str;
 
         public static void Draw(CanvasAnimatedDrawEventArgs args) {
             BackgroundWords.Draw(args);
@@ -26,7 +26,7 @@ namespace win2d_speech_recognition {
         }
 
         public static void Initialize(CanvasDevice device) {
-            str = new AnimatedString(device, new string[] { "Mirror of", "forroriM" }, true);
+            str = new PuzzleAnimatedString(device, new string[] { "Mirror of", "forroriM" }, true);
         }
 
         public static void Transition() { str.Solve(PalindromePuzzle.SOLVE_FADEOUT_TYPE.FLYOUT); }

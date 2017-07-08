@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 using Windows.UI;
 
 namespace win2d_speech_recognition {
-    class AnimatedWord {
+    class PuzzleAnimatedWord {
         #region Position
         private int loopCount;
         internal void SetPosition(Vector2 position) {
             Vector2 currentPosition = position;
-            foreach (AnimatedCharacter c in _characters) {
+            foreach (PuzzleAnimatedCharacter c in _characters) {
                 c.Position = currentPosition;
                 currentPosition.X += c.Width;
             }
@@ -24,27 +24,27 @@ namespace win2d_speech_recognition {
         #region State
         public bool Done {
             get {
-                foreach(AnimatedCharacter c in _characters) {
+                foreach(PuzzleAnimatedCharacter c in _characters) {
                     if (!c.Done) { return false; }
                 }
                 return true;
             }
         }
         public void Highlight() {
-            foreach (AnimatedCharacter c in _characters) {
+            foreach (PuzzleAnimatedCharacter c in _characters) {
                 if (char.IsLetter(c.Character)) {
-                    c.State = AnimatedCharacter.STATE.GROWING;
+                    c.State = PuzzleAnimatedCharacter.STATE.GROWING;
                 }
             }
         }
         public void Solve(PalindromePuzzle.SOLVE_FADEOUT_TYPE fadeoutType) {
-            foreach (AnimatedCharacter c in _characters) {
+            foreach (PuzzleAnimatedCharacter c in _characters) {
                 c.Solve(fadeoutType);
             }
         }
         public void FadeIn() {
-            foreach(AnimatedCharacter c in _characters) {
-                c.State = AnimatedCharacter.STATE.FADING_IN;
+            foreach(PuzzleAnimatedCharacter c in _characters) {
+                c.State = PuzzleAnimatedCharacter.STATE.FADING_IN;
             }
         }
         #endregion
@@ -54,7 +54,7 @@ namespace win2d_speech_recognition {
         #endregion
 
         #region Characters
-        private List<AnimatedCharacter> _characters = new List<AnimatedCharacter>();
+        private List<PuzzleAnimatedCharacter> _characters = new List<PuzzleAnimatedCharacter>();
         #endregion
 
         #region Bounds
@@ -68,13 +68,13 @@ namespace win2d_speech_recognition {
         #endregion
 
         #region Constructor / Initialization
-        public AnimatedWord(CanvasDevice device, string word, Color color, bool bUseLargeFont = false) {
+        public PuzzleAnimatedWord(CanvasDevice device, string word, Color color, bool bUseLargeFont = false) {
             foreach (char c in word) {
-                _characters.Add(new AnimatedCharacter(device, c, color, bUseLargeFont));
+                _characters.Add(new PuzzleAnimatedCharacter(device, c, color, bUseLargeFont));
             }
         }
         public void Refresh() {
-            foreach (AnimatedCharacter c in _characters) {
+            foreach (PuzzleAnimatedCharacter c in _characters) {
                 c.Refresh();
             }
         }
@@ -87,7 +87,7 @@ namespace win2d_speech_recognition {
             }
         }
         public void Update(CanvasAnimatedUpdateEventArgs args) {
-            foreach (AnimatedCharacter c in _characters) {
+            foreach (PuzzleAnimatedCharacter c in _characters) {
                 c.Update(args);
             }
 
@@ -98,7 +98,7 @@ namespace win2d_speech_recognition {
         #region ToString / Equality
         public override string ToString() {
             StringBuilder sb = new StringBuilder();
-            foreach (AnimatedCharacter c in _characters) {
+            foreach (PuzzleAnimatedCharacter c in _characters) {
                 if (char.IsLetter(c.Character)) {
                     sb.Append(c.Character);
                 }

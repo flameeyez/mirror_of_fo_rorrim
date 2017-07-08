@@ -15,12 +15,12 @@ namespace win2d_speech_recognition {
         private static CanvasDevice _device;
 
         public static void Draw(CanvasAnimatedDrawEventArgs args) {
-            Puzzle.Draw(args);
+            PuzzleCollection.Draw(args);
             BackgroundWords.Draw(args);
         }
 
         public static void Update(CanvasAnimatedUpdateEventArgs args) {
-            Puzzle.Update(args);
+            PuzzleCollection.Update(args);
             BackgroundWords.Update(args);
         }
 
@@ -31,10 +31,10 @@ namespace win2d_speech_recognition {
         public static void KeyDown(KeyEventArgs args) {
             switch (args.VirtualKey) {
                 case Windows.System.VirtualKey.Space:
-                    Puzzle.SolveCurrentPuzzle();
+                    PuzzleCollection.SolveCurrentPuzzle();
                     break;
                 case Windows.System.VirtualKey.G:
-                    Puzzle.CurrentPuzzle.HighlightObscurer();
+                    PuzzleCollection.CurrentPuzzle.HighlightObscurer();
                     break;
             }
         }

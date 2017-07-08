@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Windows.Media.Playback;
 
 namespace win2d_speech_recognition {
-    static class Puzzle {
+    static class PuzzleCollection {
         private static List<PalindromePuzzle> Puzzles = new List<PalindromePuzzle>();
         private static int nIndex = 0;
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace win2d_speech_recognition {
     static class BackgroundWords {
-        private static List<FloatingAnimatedString> FloatyWords = new List<FloatingAnimatedString>();
+        private static List<BackgroundAnimatedString> FloatyWords = new List<BackgroundAnimatedString>();
         private static object FloatyWordsLock = new object();
         private static Queue<string> FloatingWordsQueue = new Queue<string>();
         private static CanvasDevice _device;
@@ -19,7 +19,7 @@ namespace win2d_speech_recognition {
 
         public static void Draw(CanvasAnimatedDrawEventArgs args) {
             lock (FloatyWordsLock) {
-                foreach (FloatingAnimatedString str in FloatyWords) {
+                foreach (BackgroundAnimatedString str in FloatyWords) {
                     str.Draw(args);
                 }
             }
@@ -28,7 +28,7 @@ namespace win2d_speech_recognition {
         public static void Update(CanvasAnimatedUpdateEventArgs args) {
             lock (FloatyWordsLock) {
                 if (FloatingWordsQueue.Count > 0 && Statics.r.Next(50) == 0) {
-                    FloatyWords.Add(new FloatingAnimatedString(_device, FloatingWordsQueue.Dequeue()));
+                    FloatyWords.Add(new BackgroundAnimatedString(_device, FloatingWordsQueue.Dequeue()));
                 }
 
                 for (int i = FloatyWords.Count - 1; i >= 0; i--) {

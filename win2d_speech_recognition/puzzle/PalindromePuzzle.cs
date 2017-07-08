@@ -26,7 +26,7 @@ namespace win2d_speech_recognition {
         public bool Solved { get; set; }
         public bool Done { get { return AnimatedString.Done; } }
 
-        private AnimatedString AnimatedString;
+        private PuzzleAnimatedString AnimatedString;
         private TimeSpan _timeSinceLastHighlight;
         private static TimeSpan _highlightThreshold = new TimeSpan(0, 0, 10);
 
@@ -34,7 +34,7 @@ namespace win2d_speech_recognition {
             _puzzle = puzzle;
             _obscurer = obscurer;
             _solution = solution;
-            AnimatedString = new AnimatedString(device, puzzle);
+            AnimatedString = new PuzzleAnimatedString(device, puzzle);
             Refresh();
         }
 

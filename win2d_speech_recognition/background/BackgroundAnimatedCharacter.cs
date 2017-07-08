@@ -11,10 +11,10 @@ using Windows.Foundation;
 using Windows.UI;
 
 namespace win2d_speech_recognition {
-    class FloatingAnimatedCharacter {
+    class BackgroundAnimatedCharacter {
         #region Static
         private static CanvasTextFormat HarryP;
-        static FloatingAnimatedCharacter() {
+        static BackgroundAnimatedCharacter() {
             HarryP = new CanvasTextFormat();
             HarryP.FontFamily = "Harry P";
             HarryP.FontSize = 60;
@@ -43,7 +43,7 @@ namespace win2d_speech_recognition {
         #endregion
 
         #region Constructor
-        public FloatingAnimatedCharacter(CanvasDevice device, char c, Color color) {
+        public BackgroundAnimatedCharacter(CanvasDevice device, char c, Color color) {
             _color = color;
             Character = c;
             TextLayout = new CanvasTextLayout(device, c.ToString(), HarryP, 0, 0);

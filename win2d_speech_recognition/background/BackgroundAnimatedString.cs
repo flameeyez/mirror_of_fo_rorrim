@@ -9,7 +9,7 @@ using Microsoft.Graphics.Canvas.UI.Xaml;
 using Windows.UI;
 
 namespace win2d_speech_recognition {
-    class FloatingAnimatedString {
+    class BackgroundAnimatedString {
         #region Style
         public enum DRAW_STYLE {
             NORMAL,
@@ -32,11 +32,11 @@ namespace win2d_speech_recognition {
         #endregion
 
         #region Characters
-        private List<FloatingAnimatedCharacter> Characters = new List<FloatingAnimatedCharacter>();
+        private List<BackgroundAnimatedCharacter> Characters = new List<BackgroundAnimatedCharacter>();
         #endregion
 
         #region Constructor
-        public FloatingAnimatedString(CanvasDevice device, string str, DRAW_STYLE drawStyle = DRAW_STYLE.DEALERS_CHOICE) {
+        public BackgroundAnimatedString(CanvasDevice device, string str, DRAW_STYLE drawStyle = DRAW_STYLE.DEALERS_CHOICE) {
             byte opacity = (byte)(30 + r.Next(10));
 
             if (drawStyle == DRAW_STYLE.DEALERS_CHOICE) {
@@ -50,10 +50,10 @@ namespace win2d_speech_recognition {
                 case DRAW_STYLE.NORMAL:
                     foreach (char c in str) {
                         if (r.Next(2) == 0) {
-                            Characters.Add(new FloatingAnimatedCharacter(device, c, Color.FromArgb(opacity, AnimatedString.DarkColor.R, AnimatedString.DarkColor.G, AnimatedString.DarkColor.B)));
+                            Characters.Add(new BackgroundAnimatedCharacter(device, c, Color.FromArgb(opacity, PuzzleAnimatedString.DarkColor.R, PuzzleAnimatedString.DarkColor.G, PuzzleAnimatedString.DarkColor.B)));
                         }
                         else {
-                            Characters.Add(new FloatingAnimatedCharacter(device, c, Color.FromArgb(opacity, AnimatedString.LightColor.R, AnimatedString.LightColor.G, AnimatedString.LightColor.B)));
+                            Characters.Add(new BackgroundAnimatedCharacter(device, c, Color.FromArgb(opacity, PuzzleAnimatedString.LightColor.R, PuzzleAnimatedString.LightColor.G, PuzzleAnimatedString.LightColor.B)));
                         }
                     }
 
@@ -65,10 +65,10 @@ namespace win2d_speech_recognition {
                     string strReverse = new string(str.ToCharArray().Reverse().ToArray());
                     foreach (char c in strReverse) {
                         if (r.Next(2) == 0) {
-                            Characters.Add(new FloatingAnimatedCharacter(device, c, Color.FromArgb(opacity, AnimatedString.DarkColor.R, AnimatedString.DarkColor.G, AnimatedString.DarkColor.B)));
+                            Characters.Add(new BackgroundAnimatedCharacter(device, c, Color.FromArgb(opacity, PuzzleAnimatedString.DarkColor.R, PuzzleAnimatedString.DarkColor.G, PuzzleAnimatedString.DarkColor.B)));
                         }
                         else {
-                            Characters.Add(new FloatingAnimatedCharacter(device, c, Color.FromArgb(opacity, AnimatedString.LightColor.R, AnimatedString.LightColor.G, AnimatedString.LightColor.B)));
+                            Characters.Add(new BackgroundAnimatedCharacter(device, c, Color.FromArgb(opacity, PuzzleAnimatedString.LightColor.R, PuzzleAnimatedString.LightColor.G, PuzzleAnimatedString.LightColor.B)));
                         }
                     }
 

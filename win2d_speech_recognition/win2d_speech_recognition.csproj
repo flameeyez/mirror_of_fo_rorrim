@@ -94,17 +94,17 @@
   <ItemGroup>
     <Compile Include="background\BackgroundWords.cs" />
     <Compile Include="Music.cs" />
-    <Compile Include="puzzle\Puzzle.cs" />
-    <Compile Include="puzzle\AnimatedCharacter.cs" />
-    <Compile Include="puzzle\AnimatedLine.cs" />
-    <Compile Include="puzzle\AnimatedString.cs" />
-    <Compile Include="puzzle\AnimatedWord.cs" />
+    <Compile Include="puzzle\PuzzleCollection.cs" />
+    <Compile Include="puzzle\PuzzleAnimatedCharacter.cs" />
+    <Compile Include="puzzle\PuzzleAnimatedLine.cs" />
+    <Compile Include="puzzle\PuzzleAnimatedString.cs" />
+    <Compile Include="puzzle\PuzzleAnimatedWord.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="debug\Debug.cs" />
-    <Compile Include="puzzle\FloatingAnimatedCharacter.cs" />
-    <Compile Include="puzzle\FloatingAnimatedString.cs" />
+    <Compile Include="background\BackgroundAnimatedCharacter.cs" />
+    <Compile Include="background\BackgroundAnimatedString.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

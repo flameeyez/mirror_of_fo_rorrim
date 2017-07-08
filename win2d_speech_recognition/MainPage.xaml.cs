@@ -54,7 +54,7 @@ namespace win2d_speech_recognition {
             }
         }
 
-        private void canvasMain_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args) {
+        private void CanvasMain_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args) {
             Stopwatch s = Stopwatch.StartNew();
 
             switch (CurrentScreen) {
@@ -71,7 +71,7 @@ namespace win2d_speech_recognition {
             Debug.Draw(args);
         }
 
-        private void canvasMain_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args) {
+        private void CanvasMain_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args) {
             Stopwatch s = Stopwatch.StartNew();
 
             switch (CurrentScreen) {
@@ -94,26 +94,26 @@ namespace win2d_speech_recognition {
             Debug.Update(args);
         }
 
-        private async void canvasMain_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args) {
+        private async void CanvasMain_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args) {
             mediaSimple.MediaPlayer.RealTimePlayback = true;
             mediaSimple.MediaPlayer.IsLoopingEnabled = true;
 
-            Puzzle.Initialize(sender.Device);
+            PuzzleCollection.Initialize(sender.Device);
             await Speech.Initialize();
             BackgroundWords.Initialize(sender.Device);
             Music.Initialize();
             ScreenIntro.Initialize(sender.Device);
         }
 
-        private void canvasMain_PointerMoved(object sender, PointerRoutedEventArgs e) {
+        private void CanvasMain_PointerMoved(object sender, PointerRoutedEventArgs e) {
 
         }
 
-        private void canvasMain_PointerPressed(object sender, PointerRoutedEventArgs e) {
+        private void CanvasMain_PointerPressed(object sender, PointerRoutedEventArgs e) {
 
         }
 
-        private void canvasMain_PointerReleased(object sender, PointerRoutedEventArgs e) {
+        private void CanvasMain_PointerReleased(object sender, PointerRoutedEventArgs e) {
 
         }
     }
