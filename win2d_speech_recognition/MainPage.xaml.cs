@@ -98,6 +98,7 @@ namespace win2d_speech_recognition {
             mediaSimple.MediaPlayer.RealTimePlayback = true;
             mediaSimple.MediaPlayer.IsLoopingEnabled = true;
 
+            await Images.Initialize(sender.Device);
             PuzzleCollection.Initialize(sender.Device);
             await Speech.Initialize();
             BackgroundWords.Initialize(sender.Device);

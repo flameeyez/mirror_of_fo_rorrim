@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Media.Playback;
 using Windows.Media.SpeechRecognition;
 using Windows.UI.Core;

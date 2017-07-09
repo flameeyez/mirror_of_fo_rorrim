@@ -106,7 +106,7 @@ namespace win2d_speech_recognition {
             return sb.ToString();
         }
         public bool Equals(string str) {
-            return ToString().Equals(str);
+            return ToString().ToLower().Equals(str);
         }
         #endregion
     }

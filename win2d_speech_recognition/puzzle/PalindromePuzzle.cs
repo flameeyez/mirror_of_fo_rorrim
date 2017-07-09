@@ -27,8 +27,11 @@ namespace win2d_speech_recognition {
         public bool Done { get { return AnimatedString.Done; } }
 
         private PuzzleAnimatedString AnimatedString;
+
+        private bool _highlightAnswer = false;
         private TimeSpan _timeSinceLastHighlight;
         private static TimeSpan _highlightThreshold = new TimeSpan(0, 0, 10);
+        private static TimeSpan _initialHighlightThreshold = new TimeSpan(0, 0, 30);
 
         public PalindromePuzzle(CanvasDevice device, string puzzle, string obscurer, string solution) {
             _puzzle = puzzle;
@@ -46,7 +49,16 @@ namespace win2d_speech_recognition {
             AnimatedString.Update(args);
             if (!Solved) {
                 _timeSinceLastHighlight += args.Timing.ElapsedTime;
-                if (_timeSinceLastHighlight > _highlightThreshold) {
+                if (!_highlightAnswer) {
+                    if (_timeSinceLastHighlight > _initialHighlightThreshold) {
+                        Debug.AddTimedString("Initial highlight.");
+                        _highlightAnswer = true;
+                        HighlightObscurer();
+                        _timeSinceLastHighlight = TimeSpan.Zero;
+                    }
+                } 
+                else if (_timeSinceLastHighlight > _highlightThreshold) {
+                    Debug.AddTimedString("Subsequent highlight.");
                     HighlightObscurer();
                     _timeSinceLastHighlight = TimeSpan.Zero;
                 }
@@ -58,9 +70,10 @@ namespace win2d_speech_recognition {
         }
 
         public void Refresh() {
-            _timeSinceLastHighlight = TimeSpan.Zero;
-            AnimatedString.Refresh();
             Solved = false;
+            _highlightAnswer = false;
+            _timeSinceLastHighlight = TimeSpan.Zero;            
+            AnimatedString.Refresh();
         }
 
         public void Solve() {
