@@ -13,6 +13,9 @@ namespace win2d_speech_recognition {
     static class Statics {
         public static Random r = new Random(DateTime.Now.Millisecond);
 
+        public static double CanvasWidth { get; set; }
+        public static double CanvasHeight { get; set; }
+
         public static string Random(this string[] strArray) {
             return strArray[r.Next(strArray.Length)];
         }

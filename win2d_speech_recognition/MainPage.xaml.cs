@@ -28,7 +28,8 @@ using Windows.UI.Xaml.Navigation;
 namespace win2d_speech_recognition {
     enum SCREEN {
         INTRO,
-        MAIN
+        MAIN,
+        WINNER
     }
 
     public sealed partial class MainPage : Page {
@@ -51,6 +52,13 @@ namespace win2d_speech_recognition {
                 case SCREEN.MAIN:
                     ScreenGame.KeyDown(args);
                     break;
+                case SCREEN.WINNER:
+                    switch (args.VirtualKey) {
+                        case Windows.System.VirtualKey.Space:
+                            ScreenWinner.Transition();
+                            break;
+                    }
+                    break;
             }
         }
 
@@ -64,7 +72,10 @@ namespace win2d_speech_recognition {
                 case SCREEN.MAIN:
                     ScreenGame.Draw(args);
                     break;
-            }            
+                case SCREEN.WINNER:
+                    ScreenWinner.Draw(args);
+                    break;
+            }
 
             s.Stop();
             Debug.LastDrawMilliseconds = s.ElapsedMilliseconds;
@@ -82,19 +93,39 @@ namespace win2d_speech_recognition {
                     }
                     else {
                         ScreenIntro.Update(args);
-                    }                    
+                    }
                     break;
                 case SCREEN.MAIN:
-                    ScreenGame.Update(args);
+                    if (ScreenGame.Done) {
+                        ScreenWinner.Reset();
+                        CurrentScreen = SCREEN.WINNER;
+                        BackgroundWords.Clear();
+                    }
+                    else {
+                        ScreenGame.Update(args);
+                    }                    
                     break;
-            }            
-            
+                case SCREEN.WINNER:
+                    if (ScreenWinner.Done) {
+                        ScreenIntro.Reset();
+                        CurrentScreen = SCREEN.INTRO;
+                        BackgroundWords.Clear();
+                    }
+                    else {
+                        ScreenWinner.Update(args);
+                    }
+                    break;
+            }
+
             s.Stop();
             Debug.LastUpdateMilliseconds = s.ElapsedMilliseconds;
             Debug.Update(args);
         }
 
         private async void CanvasMain_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args) {
+            Statics.CanvasWidth = canvasMain.ActualWidth;
+            Statics.CanvasHeight = canvasMain.ActualHeight;
+
             mediaSimple.MediaPlayer.RealTimePlayback = true;
             mediaSimple.MediaPlayer.IsLoopingEnabled = true;
 
@@ -104,6 +135,7 @@ namespace win2d_speech_recognition {
             BackgroundWords.Initialize(sender.Device);
             Music.Initialize();
             ScreenIntro.Initialize(sender.Device);
+            ScreenWinner.Initialize(sender.Device);
         }
 
         private void CanvasMain_PointerMoved(object sender, PointerRoutedEventArgs e) {

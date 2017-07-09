@@ -114,6 +114,7 @@
     <Compile Include="debug\TimedString.cs" />
     <Compile Include="screens\ScreenGame.cs" />
     <Compile Include="screens\ScreenIntro.cs" />
+    <Compile Include="screens\ScreenWinner.cs" />
     <Compile Include="speech\Speech.cs" />
     <Compile Include="Statics.cs" />
   </ItemGroup>
@@ -124,7 +125,7 @@
     <None Include="win2d_speech_recognition_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\triwizard.png">
+    <Content Include="Assets\wand.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="mp3\background.mp3">

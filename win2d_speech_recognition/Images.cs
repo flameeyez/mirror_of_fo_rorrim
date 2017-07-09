@@ -1,4 +1,5 @@
 ﻿using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,13 @@ using Windows.Foundation;
 
 namespace win2d_speech_recognition {
     static class Images {
-        public static CanvasBitmap Triwizard { get; set; }
+        public static CanvasBitmap Wand { get; set; }
+        public static CanvasImageBrush WandBrush { get; set; }
 
         public static async Task Initialize(CanvasDevice device) {
-            Triwizard = await CanvasBitmap.LoadAsync(device, "Assets/triwizard.png", 96, CanvasAlphaMode.Premultiplied);
+            Wand = await CanvasBitmap.LoadAsync(device, "Assets/wand.png", 96, CanvasAlphaMode.Premultiplied);
+            WandBrush = new CanvasImageBrush(device, Wand);
+            WandBrush.Opacity = 0.1f;
         }
     }
 }

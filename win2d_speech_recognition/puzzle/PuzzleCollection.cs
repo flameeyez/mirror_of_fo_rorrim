@@ -1,10 +1,12 @@
 ﻿using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Media.Playback;
 
 namespace win2d_speech_recognition {
@@ -15,7 +17,29 @@ namespace win2d_speech_recognition {
         private static List<PalindromePuzzle> CurrentPuzzles = new List<PalindromePuzzle>();
         private static int _solveCount = 0;
         private static int _winCount = 3;
-        public static bool Winner { get { return _solveCount == _winCount; } }
+        public static bool Winner {
+            get {
+                // all puzzles solved
+                // all wand images faded in completely
+                if(_solveCount != _winCount) { return false; }
+                if (o1 != 1.0f) { return false; }
+                if (o2 != 1.0f) { return false; }
+                if (o3 != 1.0f) { return false; }
+                return true;
+            }
+        }
+
+        // coordinates and offset values for wand images (puzzle solves)
+        private static int x1 = (int)(Statics.CanvasWidth - Images.Wand.Bounds.Width) / 2 - 200;
+        private static int x2 = (int)(Statics.CanvasWidth - Images.Wand.Bounds.Width) / 2;
+        private static int x3 = (int)(Statics.CanvasWidth - Images.Wand.Bounds.Width) / 2 + 200;
+        private static int y = (int)(Statics.CanvasHeight - 30 - Images.Wand.Bounds.Height);
+        private static float o1 = 0;
+        private static float o2 = 0;
+        private static float o3 = 0;
+        private static int seed1 = Statics.r.Next(1000);
+        private static int seed2 = Statics.r.Next(1000);
+        private static int seed3 = Statics.r.Next(1000);
 
         public static PalindromePuzzle CurrentPuzzle {
             get {
@@ -45,6 +69,11 @@ namespace win2d_speech_recognition {
 
         public static void NewGame() {
             _solveCount = 0;
+
+            o1 = 0.0f;
+            o2 = 0.0f;
+            o3 = 0.0f;
+
             CurrentPuzzles.Clear();
 
             for (int i = 0; i < 3; i++) {
@@ -64,11 +93,34 @@ namespace win2d_speech_recognition {
             CurrentPuzzle.Draw(args);
         }
 
-        public static void Update(CanvasAnimatedUpdateEventArgs args) {
-            if (CurrentPuzzle == null) { return; }
+        public static void DrawSolveCount(CanvasAnimatedDrawEventArgs args) {
+            if (_solveCount > 0) {
+                args.DrawingSession.DrawImage(Images.Wand, new Rect(x1, y + (int)(7 * Math.Sin(++seed1 * 0.05)), Images.Wand.Bounds.Width, Images.Wand.Bounds.Height), Images.Wand.Bounds, o1);
 
-            if (CurrentPuzzle.Done) { NextPuzzle(); }
-            else { CurrentPuzzle.Update(args); }
+            }
+            if (_solveCount > 1) {
+                args.DrawingSession.DrawImage(Images.Wand, new Rect(x2, y + (int)(7 * Math.Sin(++seed2 * 0.05)), Images.Wand.Bounds.Width, Images.Wand.Bounds.Height), Images.Wand.Bounds, o2);
+            }
+
+            if (_solveCount > 2) {
+                args.DrawingSession.DrawImage(Images.Wand, new Rect(x3, y + (int)(7 * Math.Sin(++seed3 * 0.05)), Images.Wand.Bounds.Width, Images.Wand.Bounds.Height), Images.Wand.Bounds, o3);
+            }
+        }
+
+        public static void Update(CanvasAnimatedUpdateEventArgs args) {
+            if (CurrentPuzzle != null) {
+                if (CurrentPuzzle.Done) { NextPuzzle(); }
+                else { CurrentPuzzle.Update(args); }
+            }
+
+            if (_solveCount > 0) { o1 += 0.02f; }
+            if (o1 >= 1.0f) { o1 = 1.0f; }
+
+            if (_solveCount > 1) { o2 += 0.02f; }
+            if (o2 >= 1.0f) { o2 = 1.0f; }
+
+            if (_solveCount > 2) { o3 += 0.02f; }
+            if (o3 >= 1.0f) { o3 = 1.0f; }
         }
 
         private static void NextPuzzle() {

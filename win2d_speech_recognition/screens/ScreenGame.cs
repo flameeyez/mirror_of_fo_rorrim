@@ -15,9 +15,12 @@ namespace win2d_speech_recognition {
     static class ScreenGame {
         private static CanvasDevice _device;
 
+        public static bool Done { get { return PuzzleCollection.Winner; } }
+
         public static void Draw(CanvasAnimatedDrawEventArgs args) {
             PuzzleCollection.Draw(args);
             BackgroundWords.Draw(args);
+            PuzzleCollection.DrawSolveCount(args);
         }
 
         public static void Update(CanvasAnimatedUpdateEventArgs args) {

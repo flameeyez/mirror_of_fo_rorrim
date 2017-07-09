@@ -82,6 +82,19 @@ namespace win2d_speech_recognition {
             }
         }
 
+        public static void EnqueueWinningWords(int count) {
+            for (int i = 0; i < count; i++) {
+                EnqueueWinningWord();
+            }
+        }
+
+        private static string[] _randomWinningWords = { "Winner!", "winner", "You did it!", "Sweet!", "Cool!", "Yeah!", "Woo!" };
+        private static void EnqueueWinningWord() {
+            lock (FloatyWordsLock) {
+                FloatingWordsQueue.Enqueue(_randomWinningWords.Random());
+            }
+        }
+
         public static int Count {
             get {
                 int nReturn;
