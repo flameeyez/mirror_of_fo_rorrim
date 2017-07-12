@@ -20,8 +20,17 @@ namespace win2d_speech_recognition {
         public string Puzzle { get { return _puzzle; } }
         private string _obscurer;
         public string Obscurer { get { return _obscurer; } }
-        private string _solution;
-        public string Solution { get { return _solution; } }
+        private List<string> _solutions = new List<string>();
+
+        public bool IsSolution(string str) {
+            foreach(string solution in _solutions) {
+                if (str.Equals(solution)) { return true; }
+            }
+            return false;
+        }
+
+        //private string _solution;
+        //public string Solution { get { return _solution; } }
 
         public bool Solved { get; set; }
         public bool Done { get { return AnimatedString.Done; } }
@@ -30,13 +39,23 @@ namespace win2d_speech_recognition {
 
         private bool _highlightAnswer = false;
         private TimeSpan _timeSinceLastHighlight;
-        private static TimeSpan _highlightThreshold = new TimeSpan(0, 0, 1);//0);
-        private static TimeSpan _initialHighlightThreshold = new TimeSpan(0, 0, 1);//30);
+        private static TimeSpan _highlightThreshold = new TimeSpan(0, 0, 10);
+        private static TimeSpan _initialHighlightThreshold = new TimeSpan(0, 0, 30);
 
         public PalindromePuzzle(CanvasDevice device, string puzzle, string obscurer, string solution) {
             _puzzle = puzzle;
             _obscurer = obscurer;
-            _solution = solution;
+            _solutions.Add(solution);
+            AnimatedString = new PuzzleAnimatedString(device, puzzle);
+            Refresh();
+        }
+
+        public PalindromePuzzle(CanvasDevice device, string puzzle, string obscurer, string[] solutions) {
+            _puzzle = puzzle;
+            _obscurer = obscurer;
+            foreach(string str in solutions) {
+                _solutions.Add(str);
+            }            
             AnimatedString = new PuzzleAnimatedString(device, puzzle);
             Refresh();
         }

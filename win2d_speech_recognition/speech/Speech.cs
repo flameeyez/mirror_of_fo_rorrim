@@ -28,13 +28,17 @@ namespace win2d_speech_recognition {
 
         private static void ContinuousRecognitionSession_ResultGenerated(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args) {
             if (args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High) {
-
+                BackgroundWords.Enqueue(args.Result.Text);
                 Debug.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
-                if (PuzzleCollection.CurrentPuzzle != null && args.Result.Text.Split(" ".ToCharArray()).Contains(PuzzleCollection.CurrentPuzzle.Solution)) {
-                    PuzzleCollection.SolveCurrentPuzzle();
-                }
-                else {
-                    BackgroundWords.Enqueue(args.Result.Text);
+
+                if (PuzzleCollection.CurrentPuzzle != null) {
+                    string[] words = args.Result.Text.Split(" ".ToCharArray());
+                    foreach (string word in words) {
+                        if (PuzzleCollection.CurrentPuzzle.IsSolution(word)) {
+                            PuzzleCollection.SolveCurrentPuzzle();
+                            break;
+                        }
+                    }
                 }
             }
         }

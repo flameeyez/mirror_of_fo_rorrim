@@ -103,7 +103,7 @@ namespace win2d_speech_recognition {
                     }
                     else {
                         ScreenGame.Update(args);
-                    }                    
+                    }
                     break;
                 case SCREEN.WINNER:
                     if (ScreenWinner.Done) {
@@ -147,7 +147,17 @@ namespace win2d_speech_recognition {
         }
 
         private void CanvasMain_PointerReleased(object sender, PointerRoutedEventArgs e) {
-
+            switch (CurrentScreen) {
+                case SCREEN.INTRO:
+                    ScreenIntro.Transition();
+                    break;
+                case SCREEN.MAIN:
+                    PuzzleCollection.SolveCurrentPuzzle();
+                    break;
+                case SCREEN.WINNER:
+                    ScreenWinner.Transition();
+                    break;
+            }
         }
     }
 }
