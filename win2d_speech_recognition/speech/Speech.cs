@@ -30,7 +30,7 @@ namespace win2d_speech_recognition {
             if (args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High) {
 
                 Debug.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
-                if (args.Result.Text.Split(" ".ToCharArray()).Contains(PuzzleCollection.CurrentPuzzle.Solution)) {
+                if (PuzzleCollection.CurrentPuzzle != null && args.Result.Text.Split(" ".ToCharArray()).Contains(PuzzleCollection.CurrentPuzzle.Solution)) {
                     PuzzleCollection.SolveCurrentPuzzle();
                 }
                 else {

@@ -16,7 +16,7 @@ namespace win2d_speech_recognition {
         private static List<int> _lastUsed = new List<int>();
         private static List<PalindromePuzzle> CurrentPuzzles = new List<PalindromePuzzle>();
         private static int _solveCount = 0;
-        private static int _winCount = 3;
+        private static int _winCount = 30;
         public static bool Winner {
             get {
                 // all puzzles solved
@@ -49,6 +49,7 @@ namespace win2d_speech_recognition {
         }
 
         public static void Initialize(CanvasDevice device) {
+            AllPuzzles.Add(new PalindromePuzzle(device, "Retaliation, my baby? Meg? Never!", "retaliation", "revenge"));
             AllPuzzles.Add(new PalindromePuzzle(device, "Sore was I ere I noticed Eros.", "noticed", "saw"));
             AllPuzzles.Add(new PalindromePuzzle(device, "A man, a plan, a passage, Panama", "passage", "canal"));
             AllPuzzles.Add(new PalindromePuzzle(device, "Never a foot too distant, even.", "distant", "far"));
@@ -65,6 +66,37 @@ namespace win2d_speech_recognition {
             AllPuzzles.Add(new PalindromePuzzle(device, "No mists or snow, Simon.", "snow", "frost"));
             AllPuzzles.Add(new PalindromePuzzle(device, "Bottom step, Sara's pet spot.", "bottom", "top"));
             AllPuzzles.Add(new PalindromePuzzle(device, "Evil is a moniker of a foeman, as I live.", "moniker", "name"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Some boys interpret nine memos.", "boys", "men"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Delia sailed as unhappy Elias ailed.", "unhappy", "sad"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Did Dean help Diana? Ed did.", "help", "aid"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Tuna pecan.", "pecan", "nut"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Roy Ames, I was a wise governor.", "governor", "mayor"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "No, it is closed on one position.", "closed", "open"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Enid and Edna eat.", "eat", "dine"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Senile cats.", "cats", "felines"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Paint, O coward!", "paint", "draw"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Rise to vote, madam.", "madam", "sir"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Now, sir, a war is lost!", "lost", "won"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Live on, Time; emit no malice.", "malice", "evil"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "May a moody baby doom a potato?", "potato", "yam"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Sh! Tom sees butterflies.", "butterflies", "moths"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "No misses ordered flowers, Simon.", "flowers", "roses"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Dodge me, Dave.", "dodge", "evade"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Four animals I slam in a net.", "four", "ten"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Go hang a salami, I'm a spaghetti hog.", "spaghetti", "lasagna"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Flee to me, remote orc.", "orc", "elf"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Nemo, we revere ladies.", "ladies", "women"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "A Subaru.", "subaru", "toyota"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "He lost a Toyota now, eh?", "lost", "won"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Dog, as a demon deified, lived as a god.", "demon", "devil"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Not so, Boise.", "boise", "boston"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Stand on a potato pan, Otis.", "stand", "sit"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Eva, can I stab bats in a tunnel?", "tunnel", "cave"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Mad? Am I, sir?", "sir", "madam"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "No, it always propagates if I set a gap or prevention.", "always", "never"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Was it a mouse I saw?", "mouse", "rat"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Lew, Otto has a warm towel.", "warm", "hot"));
+            AllPuzzles.Add(new PalindromePuzzle(device, "Must buy at tallest sum.", "buy", "sell"));
         }
 
         public static void NewGame() {
@@ -74,13 +106,17 @@ namespace win2d_speech_recognition {
             o2 = 0.0f;
             o3 = 0.0f;
 
+            // debug - remove this
+            _lastUsed.Clear();
+            // debug - remove this
+
             CurrentPuzzles.Clear();
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < _winCount; i++) {
                 int index = Statics.r.Next(AllPuzzles.Count);
                 while (_lastUsed.Contains(index)) { index = Statics.r.Next(AllPuzzles.Count); }
 
-                if (_lastUsed.Count >= 10) { _lastUsed.RemoveAt(0); }
+                if (_lastUsed.Count >= _winCount * 4) { _lastUsed.RemoveAt(0); }
                 _lastUsed.Add(index);
 
                 CurrentPuzzles.Add(AllPuzzles[index]);
