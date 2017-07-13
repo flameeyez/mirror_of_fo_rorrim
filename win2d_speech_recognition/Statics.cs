@@ -19,5 +19,17 @@ namespace win2d_speech_recognition {
         public static string Random(this string[] strArray) {
             return strArray[r.Next(strArray.Length)];
         }
+
+        private static int _winCount;
+        public static int WinCount {
+            get { return _winCount; }
+            set {
+                _winCount = Math.Min(value, PuzzleCollection.TotalPuzzleCount);
+                Debug.AddTimedString("Win count: " + _winCount.ToString());
+            }
+        }
+        static Statics() {
+            _winCount = 3;
+        }
     }
 }

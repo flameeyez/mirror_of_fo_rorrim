@@ -20,27 +20,28 @@ namespace win2d_speech_recognition {
             Strings.Add("Draw: " + LastDrawMilliseconds.ToString() + "ms");
             Strings.Add("Update: " + LastUpdateMilliseconds.ToString() + "ms");
 
-            int x = 1410;
-            int y = 10;
-            int padding = 5;
-            int width = 500;
-            int height = (Strings.Count + 1) * 20;
-            args.DrawingSession.FillRectangle(new Windows.Foundation.Rect(x - padding, y - padding, width, height), Colors.Gray);
-            args.DrawingSession.DrawRoundedRectangle(new Windows.Foundation.Rect(x - padding, y - padding, width, height), 3, 3, Colors.White);
 
-            foreach (string str in Strings) {
-                args.DrawingSession.DrawText(str, new Vector2(x, y), Colors.White);
-                y += 20;
-            }
+            int padding = 5;
+            int width = 700;
+            int height = (Strings.Count + 1) * 20;
+            int x = 1920 - width - padding;
+            int y = padding;
+            //args.DrawingSession.FillRectangle(new Windows.Foundation.Rect(x - padding, y - padding, width, height), Colors.Gray);
+            //args.DrawingSession.DrawRoundedRectangle(new Windows.Foundation.Rect(x - padding, y - padding, width, height), 3, 3, Colors.White);
+
+            //foreach (string str in Strings) {
+            //    args.DrawingSession.DrawText(str, new Vector2(x, y), Colors.White);
+            //    y += 20;
+            //}
 
             if (TimedStrings.Count > 0) {
-                y += 50;
+                // y += 50;
                 height = (TimedStrings.Count + 1) * 20;
-                args.DrawingSession.FillRectangle(new Windows.Foundation.Rect(x - 5, y - 5, width, height), Colors.Gray);
-                args.DrawingSession.DrawRoundedRectangle(new Windows.Foundation.Rect(x - 5, y - 5, width, height), 3, 3, Colors.White);
+                args.DrawingSession.FillRectangle(new Windows.Foundation.Rect(x, y, width, height), Colors.Gray);
+                args.DrawingSession.DrawRoundedRectangle(new Windows.Foundation.Rect(x, y, width, height), 3, 3, Colors.White);
                 lock (TimedStringsLock) {
                     foreach (TimedString str in TimedStrings) {
-                        str.Draw(args, new Vector2(x, y));
+                        str.Draw(args, new Vector2(x + padding, y + padding));
                         y += 20;
                     }
                 }

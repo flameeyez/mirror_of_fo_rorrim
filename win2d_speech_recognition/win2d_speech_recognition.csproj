@@ -112,6 +112,8 @@
     <Compile Include="puzzle\PalindromePuzzle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="debug\TimedString.cs" />
+    <Compile Include="puzzle\SolveIcon.cs" />
+    <Compile Include="puzzle\SolveIcons.cs" />
     <Compile Include="screens\ScreenGame.cs" />
     <Compile Include="screens\ScreenIntro.cs" />
     <Compile Include="screens\ScreenWinner.cs" />

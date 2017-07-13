@@ -30,17 +30,16 @@ namespace win2d_speech_recognition {
         public static void Initialize(CanvasDevice device) {
             _device = device;
             str = new PuzzleAnimatedString(_device, new string[] { "Mirror of", "fo rorriM" }, true);
-            PuzzleCollection.NewGame();
         }
 
         public static void Transition() {
+            PuzzleCollection.NewGame();
             Music.Whoosh.Play();
             str.Solve(PalindromePuzzle.SOLVE_FADEOUT_TYPE.FLYOUT);
         }
         public static bool Done { get { return str != null && str.Done; } }
         public static void Reset() {
             str.Refresh();
-            PuzzleCollection.NewGame();
         }
     }
 }

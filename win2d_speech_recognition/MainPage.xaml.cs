@@ -47,6 +47,39 @@ namespace win2d_speech_recognition {
                         case Windows.System.VirtualKey.Space:
                             ScreenIntro.Transition();
                             break;
+                        case Windows.System.VirtualKey.Number1:
+                            Statics.WinCount = 1;
+                            break;
+                        case Windows.System.VirtualKey.Number2:
+                            Statics.WinCount = 2;
+                            break;
+                        case Windows.System.VirtualKey.Number3:
+                            Statics.WinCount = 3;
+                            break;
+                        case Windows.System.VirtualKey.Number4:
+                            Statics.WinCount = 4;
+                            break;
+                        case Windows.System.VirtualKey.Number5:
+                            Statics.WinCount = 5;
+                            break;
+                        case Windows.System.VirtualKey.Number6:
+                            Statics.WinCount = 6;
+                            break;
+                        case Windows.System.VirtualKey.Number7:
+                            Statics.WinCount = 7;
+                            break;
+                        case Windows.System.VirtualKey.Number8:
+                            Statics.WinCount = 8;
+                            break;
+                        case Windows.System.VirtualKey.Number9:
+                            Statics.WinCount = 9;
+                            break;
+                        case Windows.System.VirtualKey.Add:
+                            Statics.WinCount++;
+                            break;
+                        case Windows.System.VirtualKey.Subtract:
+                            if (Statics.WinCount > 1) { Statics.WinCount--; }
+                            break;
                     }
                     break;
                 case SCREEN.MAIN:

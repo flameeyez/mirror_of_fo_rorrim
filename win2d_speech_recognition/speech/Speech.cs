@@ -20,16 +20,16 @@ namespace win2d_speech_recognition {
         }
 
         private async static void ContinuousRecognitionSession_Completed(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionCompletedEventArgs args) {
-            Debug.AddTimedString("Speech recognition has ended.");
-            Debug.AddTimedString("Status: " + args.Status.ToString());
-            Debug.AddTimedString("Restarting recognition sequence.");
+            //Debug.AddTimedString("Speech recognition has ended.");
+            //Debug.AddTimedString("Status: " + args.Status.ToString());
+            //Debug.AddTimedString("Restarting recognition sequence.");
             await SpeechRecognizer.ContinuousRecognitionSession.StartAsync(SpeechContinuousRecognitionMode.Default);
         }
 
         private static void ContinuousRecognitionSession_ResultGenerated(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args) {
             if (args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High) {
                 BackgroundWords.Enqueue(args.Result.Text);
-                Debug.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
+                //Debug.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
 
                 if (PuzzleCollection.CurrentPuzzle != null) {
                     string[] words = args.Result.Text.Split(" ".ToCharArray());

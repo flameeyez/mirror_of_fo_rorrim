@@ -14,7 +14,7 @@ namespace win2d_speech_recognition {
         public static void Draw(CanvasAnimatedDrawEventArgs args) {
             BackgroundWords.Draw(args);
             if (str != null) { str.Draw(args); }
-            PuzzleCollection.DrawSolveCount(args);
+            SolveIcons.Draw(args);
         }
 
         public static void Update(CanvasAnimatedUpdateEventArgs args) {
@@ -25,6 +25,7 @@ namespace win2d_speech_recognition {
             BackgroundWords.Update(args);
             if (str != null) { str.Update(args); }
             PuzzleCollection.Update(args);
+            SolveIcons.Update(args);
         }
 
         public static void Initialize(CanvasDevice device) {
