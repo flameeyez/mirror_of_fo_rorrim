@@ -70,14 +70,14 @@ namespace win2d_speech_recognition {
                 _timeSinceLastHighlight += args.Timing.ElapsedTime;
                 if (!_highlightAnswer) {
                     if (_timeSinceLastHighlight > _initialHighlightThreshold) {
-                        Debug.AddTimedString("Initial highlight.");
+                        //Debug.AddTimedString("Initial highlight.");
                         _highlightAnswer = true;
                         HighlightObscurer();
                         _timeSinceLastHighlight = TimeSpan.Zero;
                     }
                 } 
                 else if (_timeSinceLastHighlight > _highlightThreshold) {
-                    Debug.AddTimedString("Subsequent highlight.");
+                    //Debug.AddTimedString("Subsequent highlight.");
                     HighlightObscurer();
                     _timeSinceLastHighlight = TimeSpan.Zero;
                 }
