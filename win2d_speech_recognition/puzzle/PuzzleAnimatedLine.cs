@@ -84,6 +84,11 @@ namespace win2d_speech_recognition {
                 word.Draw(args);
             }
         }
+        public void DrawMirrored(CanvasAnimatedDrawEventArgs args) {
+            foreach (PuzzleAnimatedWord word in Words) {
+                word.DrawMirrored(args);
+            }
+        }
         public void Update(CanvasAnimatedUpdateEventArgs args) {
             foreach (PuzzleAnimatedWord word in Words) {
                 word.Update(args);

@@ -119,27 +119,55 @@ namespace win2d_speech_recognition {
         #region Draw / Update
         public void Draw(CanvasAnimatedDrawEventArgs args) {
             Color drawColor = _color;
-            Matrix3x2 push = args.DrawingSession.Transform;
             switch (State) {
+                case STATE.FADING_IN:
+                    drawColor = Color.FromArgb(opacity, drawColor.R, drawColor.G, drawColor.B);
+                    args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(Position.X, Position.Y + _offsetY), drawColor);
+                    break;
+                case STATE.NORMAL:
+                    args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(Position.X, Position.Y + _offsetY), drawColor);
+                    break;
                 case STATE.GROWING:
                 case STATE.SHRINKING:
                     drawColor = Colors.Yellow;
+                    Matrix3x2 push = args.DrawingSession.Transform;
                     args.DrawingSession.Transform = Matrix3x2.CreateScale(scalingFactor, scalingFactor, new Vector2(Position.X + (float)TextLayout.LayoutBounds.Width / 2, Position.Y + (float)TextLayout.LayoutBounds.Height / 2));// * Matrix3x2.CreateRotation((float)(_rotation * Math.PI / 180), new Vector2(Position.X + (float)TextLayout.LayoutBounds.Width / 2, Position.Y + (float)TextLayout.LayoutBounds.Height / 2));
                     args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(Position.X, Position.Y + _offsetY), drawColor);
                     args.DrawingSession.Transform = push;
                     break;
+                case STATE.SOLVE_EXIT_STAGE_LEFT:
+                case STATE.SOLVE_EXIT_STAGE_RIGHT:
+                    args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(_solvedPosition.X, _solvedPosition.Y + _offsetY), drawColor);
+                    break;
+            }
+        }
+        public void DrawMirrored(CanvasAnimatedDrawEventArgs args) {
+            Matrix3x2 push = args.DrawingSession.Transform;
+            Vector2 mirroredPosition = new Vector2(_solvedPosition.X + Width / 2, _solvedPosition.Y);
+            args.DrawingSession.Transform = Matrix3x2.CreateScale(-1, 1, mirroredPosition);
+
+            Color drawColor = _color;
+            switch (State) {
+                case STATE.FADING_IN:
+                    drawColor = Color.FromArgb(opacity, drawColor.R, drawColor.G, drawColor.B);
+                    args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(Position.X, Position.Y + _offsetY), drawColor);
+                    break;
                 case STATE.NORMAL:
+                    args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(Position.X, Position.Y + _offsetY), drawColor);
+                    break;
+                case STATE.GROWING:
+                case STATE.SHRINKING:
+                    drawColor = Colors.Yellow;                    
+                    args.DrawingSession.Transform = Matrix3x2.CreateScale(scalingFactor, scalingFactor, new Vector2(Position.X + (float)TextLayout.LayoutBounds.Width / 2, Position.Y + (float)TextLayout.LayoutBounds.Height / 2));// * Matrix3x2.CreateRotation((float)(_rotation * Math.PI / 180), new Vector2(Position.X + (float)TextLayout.LayoutBounds.Width / 2, Position.Y + (float)TextLayout.LayoutBounds.Height / 2));
                     args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(Position.X, Position.Y + _offsetY), drawColor);
                     break;
                 case STATE.SOLVE_EXIT_STAGE_LEFT:
                 case STATE.SOLVE_EXIT_STAGE_RIGHT:
                     args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(_solvedPosition.X, _solvedPosition.Y + _offsetY), drawColor);
                     break;
-                case STATE.FADING_IN:
-                    drawColor = Color.FromArgb(opacity, drawColor.R, drawColor.G, drawColor.B);
-                    args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(_solvedPosition.X, _solvedPosition.Y + _offsetY), drawColor);
-                    break;
             }
+
+            args.DrawingSession.Transform = push;
         }
         public void Update(CanvasAnimatedUpdateEventArgs args) {
             _offsetY = (int)(7 * Math.Sin(++loopCount * 0.05));

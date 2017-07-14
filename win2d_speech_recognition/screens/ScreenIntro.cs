@@ -16,7 +16,7 @@ namespace win2d_speech_recognition {
 
         public static void Draw(CanvasAnimatedDrawEventArgs args) {
             BackgroundWords.Draw(args);
-            if (str != null) { str.Draw(args); }
+            if (str != null) { str.DrawMirrored(args); }
         }
 
         public static void Update(CanvasAnimatedUpdateEventArgs args) {
