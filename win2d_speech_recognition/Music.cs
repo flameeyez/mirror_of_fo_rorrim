@@ -26,5 +26,15 @@ namespace win2d_speech_recognition {
         private static void BackgroundMusic_MediaEnded(MediaPlayer sender, object args) {
             BackgroundMusic.Play();
         }
+
+        public static void Play(MediaPlayer audio) {
+            // if still playing, reset position to beginning
+            if (audio.PlaybackSession.PlaybackState == MediaPlaybackState.Playing) {
+                audio.PlaybackSession.Position = TimeSpan.Zero;
+            }
+            else {
+                audio.Play();
+            }
+        }
     }
 }

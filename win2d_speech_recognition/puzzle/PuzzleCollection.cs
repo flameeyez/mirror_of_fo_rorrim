@@ -20,6 +20,7 @@ namespace win2d_speech_recognition {
         private static int _solveCount = 0;
         public static int SolveCount { get { return _solveCount; } }
         public static bool Done { get { return _solveCount == Statics.WinCount; } }
+        private static bool _transitioning;
 
         public static PalindromePuzzle CurrentPuzzle {
             get {
@@ -79,6 +80,7 @@ namespace win2d_speech_recognition {
         }
 
         public static void NewGame() {
+            _transitioning = false;
             _solveCount = 0;
             SolveIcons.Initialize(Statics.WinCount);
 
@@ -115,6 +117,7 @@ namespace win2d_speech_recognition {
         }
 
         private static void NextPuzzle() {
+            _transitioning = false;
             if (CurrentPuzzles.Count == 0) { return; }
             CurrentPuzzles.RemoveAt(0);
         }
@@ -122,16 +125,13 @@ namespace win2d_speech_recognition {
         public static void SolveCurrentPuzzle() {
             if (CurrentPuzzle == null) { return; }
 
-            CurrentPuzzle.Solve();
-            SolveIcons.FadeIn(_solveCount);
-            _solveCount++;
+            if (!_transitioning) {
+                _transitioning = true;
+                CurrentPuzzle.Solve();
+                SolveIcons.FadeIn(_solveCount);
+                _solveCount++;
 
-            // if previous whoosh is still playing, reset position to beginning
-            if (Music.Whoosh.PlaybackSession.PlaybackState == MediaPlaybackState.Playing) {
-                Music.Whoosh.PlaybackSession.Position = TimeSpan.Zero;
-            }
-            else {
-                Music.Whoosh.Play();
+                Music.Play(Music.Whoosh);
             }
         }
     }

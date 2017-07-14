@@ -12,6 +12,7 @@ namespace win2d_speech_recognition {
     static class ScreenIntro {
         private static CanvasDevice _device;
         private static PuzzleAnimatedString str;
+        private static bool _transitioning;
 
         public static void Draw(CanvasAnimatedDrawEventArgs args) {
             BackgroundWords.Draw(args);
@@ -30,16 +31,21 @@ namespace win2d_speech_recognition {
         public static void Initialize(CanvasDevice device) {
             _device = device;
             str = new PuzzleAnimatedString(_device, new string[] { "Mirror of", "fo rorriM" }, true);
+            _transitioning = false;
         }
 
         public static void Transition() {
-            PuzzleCollection.NewGame();
-            Music.Whoosh.Play();
-            str.Solve(PalindromePuzzle.SOLVE_FADEOUT_TYPE.FLYOUT);
+            if (!_transitioning) {
+                _transitioning = true;
+                PuzzleCollection.NewGame();
+                Music.Play(Music.Whoosh);
+                str.Solve(PalindromePuzzle.SOLVE_FADEOUT_TYPE.FLYOUT);
+            }
         }
         public static bool Done { get { return str != null && str.Done; } }
         public static void Reset() {
             str.Refresh();
+            _transitioning = false;
         }
     }
 }

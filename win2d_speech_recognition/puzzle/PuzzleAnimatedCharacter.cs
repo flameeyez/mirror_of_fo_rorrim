@@ -22,17 +22,11 @@ namespace win2d_speech_recognition {
             NORMAL,
             GROWING,
             SHRINKING,
-            SOLVE_CONVERGE_TO_CENTER,
-            SOLVE_FLOAT_UP,
             DONE,
             FADING_IN,
             FADING_OUT,
             SOLVE_EXIT_STAGE_LEFT,
-            SOLVE_EXIT_STAGE_RIGHT,
-            SOLVE_SPECIAL_FREEZE,
-            SOLVE_JUMP,
-            SOLVE_SUPER_EXIT_STAGE_LEFT,
-            SOLVE_SUPER_EXIT_STAGE_RIGHT
+            SOLVE_EXIT_STAGE_RIGHT
         }
         public enum SOLVED_HORIZONTAL_MOVEMENT {
             LEFT,
@@ -139,8 +133,6 @@ namespace win2d_speech_recognition {
                     break;
                 case STATE.SOLVE_EXIT_STAGE_LEFT:
                 case STATE.SOLVE_EXIT_STAGE_RIGHT:
-                case STATE.SOLVE_CONVERGE_TO_CENTER:
-                case STATE.SOLVE_FLOAT_UP:
                     args.DrawingSession.DrawTextLayout(TextLayout, new Vector2(_solvedPosition.X, _solvedPosition.Y + _offsetY), drawColor);
                     break;
                 case STATE.FADING_IN:
@@ -161,49 +153,6 @@ namespace win2d_speech_recognition {
                 case STATE.SHRINKING:
                     scalingFactor -= 0.1f;
                     if (scalingFactor <= 1.0f) { scalingFactor = 1.0f; State = STATE.NORMAL; }
-                    break;
-                case STATE.SOLVE_CONVERGE_TO_CENTER:
-                    if (_solvedPosition.X < 1920 / 2) {
-                        _solvedPosition.X += 10;
-                    }
-                    else if (_solvedPosition.X > 1920 / 2) {
-                        _solvedPosition.X -= 10;
-                    }
-
-                    if ((_solvedPosition.X > 1920 / 2 - (Width * 2))
-                        && _solvedPosition.X < 1920 / 2 + (Width * 2)) {
-                        State = STATE.SOLVE_FLOAT_UP;
-                        switch (r.Next(2)) {
-                            case 0:
-                                HorizontalMovement = SOLVED_HORIZONTAL_MOVEMENT.LEFT;
-                                break;
-                            case 1:
-                                HorizontalMovement = SOLVED_HORIZONTAL_MOVEMENT.RIGHT;
-                                break;
-                        }
-                    }
-                    break;
-                case STATE.SOLVE_FLOAT_UP:
-                    switch (HorizontalMovement) {
-                        case SOLVED_HORIZONTAL_MOVEMENT.LEFT:
-                            _solvedPosition.X -= 5 + r.Next(10);
-                            if ((_solvedPosition.X < (1920 / 2) - 100) && r.Next(10) == 0) {
-                                HorizontalMovement = SOLVED_HORIZONTAL_MOVEMENT.RIGHT;
-                            }
-                            break;
-                        case SOLVED_HORIZONTAL_MOVEMENT.RIGHT:
-                            _solvedPosition.X += 5 + r.Next(10);
-                            if ((_solvedPosition.X > (1920 / 2) + 100) && r.Next(10) == 0) {
-                                HorizontalMovement = SOLVED_HORIZONTAL_MOVEMENT.LEFT;
-                            }
-                            break;
-                    }
-
-                    _solvedPosition.Y -= 5;
-
-                    if (_solvedPosition.Y < -Height) {
-                        State = STATE.DONE;
-                    }
                     break;
                 case STATE.FADING_IN:
                     byte step = 2;
@@ -233,9 +182,6 @@ namespace win2d_speech_recognition {
 
         public void Solve(PalindromePuzzle.SOLVE_FADEOUT_TYPE fadeoutType) {
             switch (fadeoutType) {
-                case PalindromePuzzle.SOLVE_FADEOUT_TYPE.SPIRAL_UP:
-                    State = STATE.SOLVE_CONVERGE_TO_CENTER;
-                    break;
                 case PalindromePuzzle.SOLVE_FADEOUT_TYPE.FLYOUT:
                     switch (r.Next(2)) {
                         case 0:
