@@ -59,7 +59,7 @@ namespace win2d_speech_recognition {
 
                     _drawStyle = DRAW_STYLE.NORMAL;
                     _position = new Vector2(1920, r.Next(900));
-                    _velocityX = -2; // -(1 + r.Next(2));
+                    _velocityX = -2 - Statics.r.Next(3); // -(1 + r.Next(2));
                     break;
                 case DRAW_STYLE.MIRRORED:
                     string strReverse = new string(str.ToCharArray().Reverse().ToArray());
@@ -74,7 +74,7 @@ namespace win2d_speech_recognition {
 
                     _drawStyle = DRAW_STYLE.MIRRORED;
                     _position = new Vector2(-_width, r.Next(900));
-                    _velocityX = 2; //  1 + r.Next(2);
+                    _velocityX = 2 + Statics.r.Next(3); //  1 + r.Next(2);
                     break;
                 default:
                     throw new Exception();

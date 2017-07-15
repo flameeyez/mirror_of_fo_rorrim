@@ -11,6 +11,7 @@ using Windows.Media.SpeechRecognition;
 
 namespace win2d_speech_recognition {
     static class Statics {
+        public static SCREEN CurrentScreen = SCREEN.INTRO;
         public static Random r = new Random(DateTime.Now.Millisecond);
 
         public static double CanvasWidth { get; set; }
@@ -30,6 +31,16 @@ namespace win2d_speech_recognition {
         }
         static Statics() {
             _winCount = 3;
+        }
+
+        private static string[] _words = { "porkchop", "abfdslkje", "sandwich", "wizard", "magic", "gumdrops", "banana", "radiator" };
+        public static string RandomMicTestWord() {
+            return _words.Random();
+        }
+
+        private static string[] _randomYesWords = { "yes", "definitely", "totally", "absolutely" };
+        public static string RandomYesWord() {
+            return _randomYesWords.Random();
         }
     }
 }

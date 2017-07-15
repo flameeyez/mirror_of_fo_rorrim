@@ -27,18 +27,33 @@ namespace win2d_speech_recognition {
         }
 
         private static void ContinuousRecognitionSession_ResultGenerated(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args) {
+            Debug.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
             if (args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High) {
-                BackgroundWords.Enqueue(args.Result.Text);
-                //Debug.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
+                switch (Statics.CurrentScreen) {
+                    case SCREEN.MIC_TEST:
+                        ScreenMicTest.Transition();
+                        break;
+                    case SCREEN.MIC_TEST_RESPONSE:
+                        ScreenMicTestResponse.Transition();
+                        break;
+                    case SCREEN.LETS_GO:
+                        ScreenLetsGo.Transition();
+                        break;
+                    default:
+                        for(int i = 0; i < 5; i++) {
+                            BackgroundWords.Enqueue(args.Result.Text);
+                        }                        
 
-                if (PuzzleCollection.CurrentPuzzle != null) {
-                    string[] words = args.Result.Text.Split(" ".ToCharArray());
-                    foreach (string word in words) {
-                        if (PuzzleCollection.CurrentPuzzle.IsSolution(word)) {
-                            PuzzleCollection.SolveCurrentPuzzle();
-                            break;
+                        if (PuzzleCollection.CurrentPuzzle != null) {
+                            string[] words = args.Result.Text.Split(" ".ToCharArray());
+                            foreach (string word in words) {
+                                if (PuzzleCollection.CurrentPuzzle.IsSolution(word)) {
+                                    PuzzleCollection.SolveCurrentPuzzle();
+                                    break;
+                                }
+                            }
                         }
-                    }
+                        break;
                 }
             }
         }

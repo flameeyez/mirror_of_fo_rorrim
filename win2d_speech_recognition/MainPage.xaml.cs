@@ -28,20 +28,21 @@ using Windows.UI.Xaml.Navigation;
 namespace win2d_speech_recognition {
     enum SCREEN {
         INTRO,
+        MIC_TEST,
+        MIC_TEST_RESPONSE,
+        LETS_GO,
         MAIN,
         WINNER
     }
 
     public sealed partial class MainPage : Page {
-        private SCREEN CurrentScreen = SCREEN.INTRO;
-
         public MainPage() {
             this.InitializeComponent();
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
         }
 
         private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args) {
-            switch (CurrentScreen) {
+            switch (Statics.CurrentScreen) {
                 case SCREEN.INTRO:
                     switch (args.VirtualKey) {
                         case Windows.System.VirtualKey.Space:
@@ -82,6 +83,27 @@ namespace win2d_speech_recognition {
                             break;
                     }
                     break;
+                case SCREEN.MIC_TEST:
+                    switch (args.VirtualKey) {
+                        case Windows.System.VirtualKey.Space:
+                            ScreenMicTest.Transition();
+                            break;
+                    }
+                    break;
+                case SCREEN.MIC_TEST_RESPONSE:
+                    switch (args.VirtualKey) {
+                        case Windows.System.VirtualKey.Space:
+                            ScreenMicTestResponse.Transition();
+                            break;
+                    }
+                    break;
+                case SCREEN.LETS_GO:
+                    switch (args.VirtualKey) {
+                        case Windows.System.VirtualKey.Space:
+                            ScreenLetsGo.Transition();
+                            break;
+                    }
+                    break;
                 case SCREEN.MAIN:
                     ScreenGame.KeyDown(args);
                     break;
@@ -98,9 +120,18 @@ namespace win2d_speech_recognition {
         private void CanvasMain_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args) {
             Stopwatch s = Stopwatch.StartNew();
 
-            switch (CurrentScreen) {
+            switch (Statics.CurrentScreen) {
                 case SCREEN.INTRO:
                     ScreenIntro.Draw(args);
+                    break;
+                case SCREEN.MIC_TEST:
+                    ScreenMicTest.Draw(args);
+                    break;
+                case SCREEN.MIC_TEST_RESPONSE:
+                    ScreenMicTestResponse.Draw(args);
+                    break;
+                case SCREEN.LETS_GO:
+                    ScreenLetsGo.Draw(args);
                     break;
                 case SCREEN.MAIN:
                     ScreenGame.Draw(args);
@@ -118,21 +149,51 @@ namespace win2d_speech_recognition {
         private void CanvasMain_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args) {
             Stopwatch s = Stopwatch.StartNew();
 
-            switch (CurrentScreen) {
+            switch (Statics.CurrentScreen) {
                 case SCREEN.INTRO:
                     if (ScreenIntro.Done) {
-                        CurrentScreen = SCREEN.MAIN;
+                        ScreenMicTest.Reset();
                         BackgroundWords.Clear();
+                        Statics.CurrentScreen = SCREEN.MIC_TEST;                        
                     }
                     else {
                         ScreenIntro.Update(args);
                     }
                     break;
+                case SCREEN.MIC_TEST:
+                    if (ScreenMicTest.Done) {
+                        ScreenMicTestResponse.Reset();
+                        BackgroundWords.Clear();
+                        Statics.CurrentScreen = SCREEN.MIC_TEST_RESPONSE;                        
+                    }
+                    else {
+                        ScreenMicTest.Update(args);
+                    }
+                    break;
+                case SCREEN.MIC_TEST_RESPONSE:
+                    if (ScreenMicTestResponse.Done) {
+                        ScreenLetsGo.Reset();
+                        BackgroundWords.Clear();
+                        Statics.CurrentScreen = SCREEN.LETS_GO;                        
+                    }
+                    else {
+                        ScreenMicTestResponse.Update(args);
+                    }
+                    break;
+                case SCREEN.LETS_GO:
+                    if (ScreenLetsGo.Done) {
+                        BackgroundWords.Clear();
+                        Statics.CurrentScreen = SCREEN.MAIN;                        
+                    }
+                    else {
+                        ScreenLetsGo.Update(args);
+                    }
+                    break;
                 case SCREEN.MAIN:
                     if (ScreenGame.Done) {
                         ScreenWinner.Reset();
-                        CurrentScreen = SCREEN.WINNER;
                         BackgroundWords.Clear();
+                        Statics.CurrentScreen = SCREEN.WINNER;                        
                     }
                     else {
                         ScreenGame.Update(args);
@@ -141,8 +202,8 @@ namespace win2d_speech_recognition {
                 case SCREEN.WINNER:
                     if (ScreenWinner.Done) {
                         ScreenIntro.Reset();
-                        CurrentScreen = SCREEN.INTRO;
                         BackgroundWords.Clear();
+                        Statics.CurrentScreen = SCREEN.INTRO;                        
                     }
                     else {
                         ScreenWinner.Update(args);
@@ -167,6 +228,9 @@ namespace win2d_speech_recognition {
             await Speech.Initialize();
             BackgroundWords.Initialize(sender.Device);
             Music.Initialize();
+            ScreenMicTest.Initialize(sender.Device);
+            ScreenMicTestResponse.Initialize(sender.Device);
+            ScreenLetsGo.Initialize(sender.Device);
             ScreenIntro.Initialize(sender.Device);
             ScreenWinner.Initialize(sender.Device);
         }
@@ -180,9 +244,18 @@ namespace win2d_speech_recognition {
         }
 
         private void CanvasMain_PointerReleased(object sender, PointerRoutedEventArgs e) {
-            switch (CurrentScreen) {
+            switch (Statics.CurrentScreen) {
                 case SCREEN.INTRO:
                     ScreenIntro.Transition();
+                    break;
+                case SCREEN.MIC_TEST:
+                    ScreenMicTest.Transition();
+                    break;
+                case SCREEN.MIC_TEST_RESPONSE:
+                    ScreenMicTestResponse.Transition();
+                    break;
+                case SCREEN.LETS_GO:
+                    ScreenLetsGo.Transition();
                     break;
                 case SCREEN.MAIN:
                     PuzzleCollection.SolveCurrentPuzzle();

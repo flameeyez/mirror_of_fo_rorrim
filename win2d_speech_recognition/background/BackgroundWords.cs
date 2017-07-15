@@ -95,6 +95,45 @@ namespace win2d_speech_recognition {
             }
         }
 
+        public static void EnqueueRandomMicTestWords(int count) {
+            for (int i = 0; i < count; i++) {
+                EnqueueRandomMicTestWord();
+            }
+        }
+
+        private static string[] _randomMicTestWords = { "Test!", "should work", "totally not a joke screen", "microphone", "say something" };
+        private static void EnqueueRandomMicTestWord() {
+            lock (FloatyWordsLock) {
+                FloatingWordsQueue.Enqueue(_randomMicTestWords.Random());
+            }
+        }
+
+        public static void EnqueueRandomMicTestResponseWords(int count) {
+            for (int i = 0; i < count; i++) {
+                EnqueueRandomMicTestResponseWord();
+            }
+        }
+
+        private static string[] _randomMicTestResponseWords = { "extremely accurate", "totally worked", "also not a joke screen" };
+        private static void EnqueueRandomMicTestResponseWord() {
+            lock (FloatyWordsLock) {
+                FloatingWordsQueue.Enqueue(_randomMicTestResponseWords.Random());
+            }
+        }
+
+        public static void EnqueueRandomLetsGoWords(int count) {
+            for (int i = 0; i < count; i++) {
+                EnqueueRandomLetsGoWord();
+            }
+        }
+
+        private static string[] _randomLetsGoWords = { "let's go!", "ready!" };
+        private static void EnqueueRandomLetsGoWord() {
+            lock (FloatyWordsLock) {
+                FloatingWordsQueue.Enqueue(_randomLetsGoWords.Random());
+            }
+        }
+
         public static int Count {
             get {
                 int nReturn;

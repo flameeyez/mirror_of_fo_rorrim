@@ -9,19 +9,19 @@ using Windows.Foundation;
 using Windows.UI.Core;
 
 namespace win2d_speech_recognition {
-    static class ScreenIntro {
+    static class ScreenMicTest {
         private static CanvasDevice _device;
         private static PuzzleAnimatedString str;
         private static bool _transitioning;
 
         public static void Draw(CanvasAnimatedDrawEventArgs args) {
             BackgroundWords.Draw(args);
-            if (str != null) { str.DrawMirrored(args); }
+            if (str != null) { str.Draw(args); }
         }
 
         public static void Update(CanvasAnimatedUpdateEventArgs args) {
-            if (BackgroundWords.Count < 40) {
-                BackgroundWords.EnqueueRandomWords(40);
+            if (BackgroundWords.Count < 20) {
+                BackgroundWords.EnqueueRandomMicTestWords(20);
             }
 
             BackgroundWords.Update(args);
@@ -30,14 +30,13 @@ namespace win2d_speech_recognition {
 
         public static void Initialize(CanvasDevice device) {
             _device = device;
-            str = new PuzzleAnimatedString(_device, new string[] { "Mirror of", "fo rorriM" }, true);
+            str = new PuzzleAnimatedString(_device, new string[] { "Microphone test!", "Say something." }, false);
             _transitioning = false;
         }
 
         public static void Transition() {
             if (!_transitioning) {
                 _transitioning = true;
-                PuzzleCollection.NewGame();
                 Music.Play(Music.Whoosh);
                 str.Solve(PalindromePuzzle.SOLVE_FADEOUT_TYPE.FLYOUT);
             }
