@@ -28,9 +28,6 @@ using Windows.UI.Xaml.Navigation;
 namespace win2d_speech_recognition {
     enum SCREEN {
         INTRO,
-        MIC_TEST,
-        MIC_TEST_RESPONSE,
-        LETS_GO,
         MAIN,
         WINNER
     }
@@ -83,27 +80,6 @@ namespace win2d_speech_recognition {
                             break;
                     }
                     break;
-                case SCREEN.MIC_TEST:
-                    switch (args.VirtualKey) {
-                        case Windows.System.VirtualKey.Space:
-                            ScreenMicTest.Transition();
-                            break;
-                    }
-                    break;
-                case SCREEN.MIC_TEST_RESPONSE:
-                    switch (args.VirtualKey) {
-                        case Windows.System.VirtualKey.Space:
-                            ScreenMicTestResponse.Transition();
-                            break;
-                    }
-                    break;
-                case SCREEN.LETS_GO:
-                    switch (args.VirtualKey) {
-                        case Windows.System.VirtualKey.Space:
-                            ScreenLetsGo.Transition();
-                            break;
-                    }
-                    break;
                 case SCREEN.MAIN:
                     ScreenGame.KeyDown(args);
                     break;
@@ -124,15 +100,6 @@ namespace win2d_speech_recognition {
                 case SCREEN.INTRO:
                     ScreenIntro.Draw(args);
                     break;
-                case SCREEN.MIC_TEST:
-                    ScreenMicTest.Draw(args);
-                    break;
-                case SCREEN.MIC_TEST_RESPONSE:
-                    ScreenMicTestResponse.Draw(args);
-                    break;
-                case SCREEN.LETS_GO:
-                    ScreenLetsGo.Draw(args);
-                    break;
                 case SCREEN.MAIN:
                     ScreenGame.Draw(args);
                     break;
@@ -152,41 +119,11 @@ namespace win2d_speech_recognition {
             switch (Statics.CurrentScreen) {
                 case SCREEN.INTRO:
                     if (ScreenIntro.Done) {
-                        ScreenMicTest.Reset();
                         BackgroundWords.Clear();
-                        Statics.CurrentScreen = SCREEN.MIC_TEST;                        
+                        Statics.CurrentScreen = SCREEN.MAIN;
                     }
                     else {
                         ScreenIntro.Update(args);
-                    }
-                    break;
-                case SCREEN.MIC_TEST:
-                    if (ScreenMicTest.Done) {
-                        ScreenMicTestResponse.Reset();
-                        BackgroundWords.Clear();
-                        Statics.CurrentScreen = SCREEN.MIC_TEST_RESPONSE;                        
-                    }
-                    else {
-                        ScreenMicTest.Update(args);
-                    }
-                    break;
-                case SCREEN.MIC_TEST_RESPONSE:
-                    if (ScreenMicTestResponse.Done) {
-                        ScreenLetsGo.Reset();
-                        BackgroundWords.Clear();
-                        Statics.CurrentScreen = SCREEN.LETS_GO;                        
-                    }
-                    else {
-                        ScreenMicTestResponse.Update(args);
-                    }
-                    break;
-                case SCREEN.LETS_GO:
-                    if (ScreenLetsGo.Done) {
-                        BackgroundWords.Clear();
-                        Statics.CurrentScreen = SCREEN.MAIN;                        
-                    }
-                    else {
-                        ScreenLetsGo.Update(args);
                     }
                     break;
                 case SCREEN.MAIN:
@@ -247,15 +184,6 @@ namespace win2d_speech_recognition {
             switch (Statics.CurrentScreen) {
                 case SCREEN.INTRO:
                     ScreenIntro.Transition();
-                    break;
-                case SCREEN.MIC_TEST:
-                    ScreenMicTest.Transition();
-                    break;
-                case SCREEN.MIC_TEST_RESPONSE:
-                    ScreenMicTestResponse.Transition();
-                    break;
-                case SCREEN.LETS_GO:
-                    ScreenLetsGo.Transition();
                     break;
                 case SCREEN.MAIN:
                     PuzzleCollection.SolveCurrentPuzzle();

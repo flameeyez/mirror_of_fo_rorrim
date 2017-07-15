@@ -84,10 +84,6 @@ namespace win2d_speech_recognition {
             _solveCount = 0;
             SolveIcons.Initialize(Statics.WinCount);
 
-            // debug - remove this
-            _lastUsed.Clear();
-            // debug - remove this
-
             CurrentPuzzles.Clear();
             List<int> currentPuzzles = new List<int>();
 
@@ -95,7 +91,7 @@ namespace win2d_speech_recognition {
                 int index = Statics.r.Next(AllPuzzles.Count);
                 while (_lastUsed.Contains(index) || currentPuzzles.Contains(index)) { index = Statics.r.Next(AllPuzzles.Count); }
 
-                if (_lastUsed.Count >= Statics.WinCount * 4) { _lastUsed.RemoveAt(0); }
+                if (_lastUsed.Count >= (AllPuzzles.Count / 2)) { _lastUsed.RemoveAt(0); }
                 _lastUsed.Add(index);
 
                 AllPuzzles[index].Refresh();

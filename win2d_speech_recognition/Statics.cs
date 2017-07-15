@@ -30,7 +30,7 @@ namespace win2d_speech_recognition {
             }
         }
         static Statics() {
-            _winCount = 3;
+            _winCount = 5;
         }
 
         private static string[] _words = { "porkchop", "abfdslkje", "sandwich", "wizard", "magic", "gumdrops", "banana", "radiator" };

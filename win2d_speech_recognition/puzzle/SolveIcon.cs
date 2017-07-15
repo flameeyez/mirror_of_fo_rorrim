@@ -24,7 +24,7 @@ namespace win2d_speech_recognition {
 
         public SolveIcon(Vector2 position) {
             _position = position;
-            _opacity = 0.0f;
+            _opacity = 0.1f;
             _state = SOLVE_ICON_STATE.HIDDEN;
             _seed = Statics.r.Next(1000);
         }

@@ -22,7 +22,7 @@ namespace win2d_speech_recognition {
             _icons.Clear();
 
             // calculate icon positions based on count and canvas width
-            int padding = 20;
+            int padding = 50;
             int imageWidth = (int)Images.Wand.Bounds.Width;
             int imageHeight = (int)Images.Wand.Bounds.Height;
             int totalWidth = (imageWidth * iconCount) + (padding * (iconCount - 1));
