@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace win2d_speech_recognition {
     static class SolveIcons {
         private static List<SolveIcon> _icons = new List<SolveIcon>();
-        private static SOLVE_ICON_STATE _state = SOLVE_ICON_STATE.FADING_IN;
 
         public static bool Done {
             get {

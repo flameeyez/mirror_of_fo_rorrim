@@ -10,32 +10,38 @@ using Windows.Foundation;
 using Windows.Media.Playback;
 using Windows.Media.SpeechRecognition;
 using Windows.UI.Core;
+using Windows.System;
 
 namespace win2d_speech_recognition {
-    static class ScreenGame {
-        private static CanvasDevice _device;
+    class ScreenGame : ScreenBase {
+        public ScreenGame(CanvasDevice device) : base(device) { }
 
-        public static bool Done { get { return PuzzleCollection.Done && SolveIcons.Done; } }
+        public override bool Done { get { return PuzzleCollection.Done && SolveIcons.Done; } }
 
-        public static void Draw(CanvasAnimatedDrawEventArgs args) {
+        public override void Draw(CanvasAnimatedDrawEventArgs args) {
             PuzzleCollection.Draw(args);
             BackgroundWords.Draw(args);
             SolveIcons.Draw(args);
         }
 
-        public static void Update(CanvasAnimatedUpdateEventArgs args) {
+        public override void Update(CanvasAnimatedUpdateEventArgs args) {
             PuzzleCollection.Update(args);
             BackgroundWords.Update(args);
             SolveIcons.Update(args);
         }
 
-        public static void KeyDown(KeyEventArgs args) {
-            switch (args.VirtualKey) {
-                case Windows.System.VirtualKey.Space:
-                    PuzzleCollection.SolveCurrentPuzzle();
-                    break;
-                case Windows.System.VirtualKey.G:
-                    PuzzleCollection.CurrentPuzzle.HighlightObscurer();
+        public override void Reset() {
+            //throw new NotImplementedException();
+        }
+
+        public override void Transition() {
+            PuzzleCollection.SolveCurrentPuzzle();
+        }
+
+        public override void KeyDown(VirtualKey vk) {
+            switch (vk) {
+                case VirtualKey.Space:
+                    Transition();
                     break;
             }
         }

@@ -32,15 +32,5 @@ namespace win2d_speech_recognition {
         static Statics() {
             _winCount = 5;
         }
-
-        private static string[] _words = { "porkchop", "abfdslkje", "sandwich", "wizard", "magic", "gumdrops", "banana", "radiator" };
-        public static string RandomMicTestWord() {
-            return _words.Random();
-        }
-
-        private static string[] _randomYesWords = { "yes", "definitely", "totally", "absolutely" };
-        public static string RandomYesWord() {
-            return _randomYesWords.Random();
-        }
     }
 }

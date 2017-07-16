@@ -114,11 +114,10 @@
     <Compile Include="debug\TimedString.cs" />
     <Compile Include="puzzle\SolveIcon.cs" />
     <Compile Include="puzzle\SolveIcons.cs" />
+    <Compile Include="screens\ScreenBase.cs" />
     <Compile Include="screens\ScreenGame.cs" />
-    <Compile Include="screens\ScreenLetsGo.cs" />
-    <Compile Include="screens\ScreenMicTestResponse.cs" />
-    <Compile Include="screens\ScreenMicTest.cs" />
     <Compile Include="screens\ScreenIntro.cs" />
+    <Compile Include="screens\Screens.cs" />
     <Compile Include="screens\ScreenWinner.cs" />
     <Compile Include="speech\Speech.cs" />
     <Compile Include="Statics.cs" />

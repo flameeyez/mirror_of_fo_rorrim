@@ -28,22 +28,18 @@ namespace win2d_speech_recognition {
 
         private static void ContinuousRecognitionSession_ResultGenerated(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args) {
             Debug.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
-            switch (Statics.CurrentScreen) {
-                default:
-                    for (int i = 0; i < 5; i++) {
-                        BackgroundWords.Enqueue(args.Result.Text);
-                    }
+            for (int i = 0; i < 5; i++) {
+                BackgroundWords.Enqueue(args.Result.Text);
+            }
 
-                    if (PuzzleCollection.CurrentPuzzle != null) {
-                        string[] words = args.Result.Text.Split(" ".ToCharArray());
-                        foreach (string word in words) {
-                            if (PuzzleCollection.CurrentPuzzle.IsSolution(word)) {
-                                PuzzleCollection.SolveCurrentPuzzle();
-                                break;
-                            }
-                        }
+            if (PuzzleCollection.CurrentPuzzle != null) {
+                string[] words = args.Result.Text.Split(" ".ToCharArray());
+                foreach (string word in words) {
+                    if (PuzzleCollection.CurrentPuzzle.IsSolution(word)) {
+                        PuzzleCollection.SolveCurrentPuzzle();
+                        break;
                     }
-                    break;
+                }
             }
         }
     }

@@ -27,8 +27,6 @@ namespace win2d_speech_recognition {
         #region Position / Movement / Color
         private int loopCount;
         private int _rotation;
-        private int _velocityX = 1;
-        private int _velocityY = 1;
         #endregion
 
         #region Bounds
