@@ -27,7 +27,7 @@ namespace mirror_of_fo_rorrim {
         }
 
         private static void ContinuousRecognitionSession_ResultGenerated(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args) {
-            Debug.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
+            Debugging.AddTimedString("Matched (" + args.Result.Confidence.ToString() + "): " + args.Result.Text);
             for (int i = 0; i < 5; i++) {
                 BackgroundWords.Enqueue(args.Result.Text);
             }

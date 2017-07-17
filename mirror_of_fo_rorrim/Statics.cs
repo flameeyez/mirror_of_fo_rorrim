@@ -26,7 +26,7 @@ namespace mirror_of_fo_rorrim {
             get { return _winCount; }
             set {
                 _winCount = Math.Min(value, PuzzleCollection.TotalPuzzleCount);
-                Debug.AddTimedString("Win count: " + _winCount.ToString());
+                Debugging.AddTimedString("Win count: " + _winCount.ToString());
             }
         }
         static Statics() {

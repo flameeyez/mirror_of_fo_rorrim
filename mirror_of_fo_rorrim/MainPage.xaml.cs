@@ -49,8 +49,8 @@ namespace mirror_of_fo_rorrim {
             Screens.Draw(args);
             s.Stop();
 
-            Debug.LastDrawMilliseconds = s.ElapsedMilliseconds;
-            Debug.Draw(args);
+            Debugging.LastDrawMilliseconds = s.ElapsedMilliseconds;
+            Debugging.Draw(args);
         }
 
         private void CanvasMain_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args) {
@@ -58,8 +58,8 @@ namespace mirror_of_fo_rorrim {
             Screens.Update(args);
             s.Stop();
 
-            Debug.LastUpdateMilliseconds = s.ElapsedMilliseconds;
-            Debug.Update(args);
+            Debugging.LastUpdateMilliseconds = s.ElapsedMilliseconds;
+            Debugging.Update(args);
         }
 
         private async void CanvasMain_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args) {

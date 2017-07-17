@@ -103,7 +103,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="debug\Debug.cs" />
+    <Compile Include="debugging\Debugging.cs" />
     <Compile Include="background\BackgroundAnimatedCharacter.cs" />
     <Compile Include="background\BackgroundAnimatedString.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -111,7 +111,7 @@
     </Compile>
     <Compile Include="puzzle\PalindromePuzzle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="debug\TimedString.cs" />
+    <Compile Include="debugging\TimedString.cs" />
     <Compile Include="puzzle\SolveIcon.cs" />
     <Compile Include="puzzle\SolveIcons.cs" />
     <Compile Include="screens\ScreenBase.cs" />
