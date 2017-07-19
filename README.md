@@ -10,4 +10,4 @@ Players will see a series of phrases, each of which is _almost_ a palindrome. Th
 - This project uses the Harry P font, which is not included in the repository.
 - You'll need to turn on speech services in Windows 10 settings; otherwise, the app will throw an exception as it loads
 - Solve icon is an inversion of an icon made by Freepik from www.flaticon.com
-- Current background obtained from https://www.youtube.com/watch?v=cQCDtOFV2Ic
+- Background video was found on YouTube, but I can't seem to find it again, for some reason
